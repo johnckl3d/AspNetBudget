@@ -89,6 +89,7 @@ namespace MeetupAPI
                  {
                      costCategoryId = "a4f10e4c-70cb-44ae-985b-32f13cf9429f",
                      Name = "Utilities",
+                     totalAmount = 431.00,
                      costItems = new List<CostItem>
                     {
                           new CostItem
@@ -109,6 +110,7 @@ namespace MeetupAPI
                  {
                         costCategoryId = "ce9103a4-e331-45ea-9bac-54a693de3bfb",
                      Name = "Food",
+                       totalAmount = 10.50,
                      costItems = new List<CostItem>
                     {
                           new CostItem

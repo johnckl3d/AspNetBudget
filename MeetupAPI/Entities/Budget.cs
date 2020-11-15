@@ -12,6 +12,8 @@ namespace MeetupAPI.Entities
 
         public string costCategoryId { get; set; }
 
+        public double totalAmount { get; set; }
+
         //public virtual User User { get; set; }
 
         //public int? UserId { get; set; }
