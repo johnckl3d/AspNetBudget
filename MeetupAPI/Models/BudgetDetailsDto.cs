@@ -7,6 +7,7 @@ namespace MeetupAPI.Models
 {
     public class BudgetDetailsDto
     {
+        public string costCategoryId { get; set; }
         public string Name { get; set; }
         public List<CostItemDto> CostItems { get; set; }
     }

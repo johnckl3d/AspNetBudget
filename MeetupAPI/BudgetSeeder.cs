@@ -87,6 +87,7 @@ namespace MeetupAPI
             var budgets = new List<Budget> {
                  new Budget
                  {
+                     costCategoryId = "a4f10e4c-70cb-44ae-985b-32f13cf9429f",
                      Name = "Utilities",
                      costItems = new List<CostItem>
                     {
@@ -106,6 +107,7 @@ namespace MeetupAPI
                    },
                    new Budget
                  {
+                        costCategoryId = "ce9103a4-e331-45ea-9bac-54a693de3bfb",
                      Name = "Food",
                      costItems = new List<CostItem>
                     {
