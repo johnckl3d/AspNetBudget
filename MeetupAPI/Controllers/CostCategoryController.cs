@@ -31,16 +31,58 @@ namespace MeetupAPI.Controllers
 
         [HttpGet]
         [AllowAnonymous]
-        public ActionResult<List<CostCategoryDetailsDto>> Get()
+        public ActionResult<List<CostCategoryDto>> Get()
         {
            
-            var budgets = _budgetContext.Budgets.Include(b => b.costItems).ToList();
-            var budgetDtos = _mapper.Map<List<CostCategoryDetailsDto>>(budgets);
+            var budgets = _budgetContext.CostCategories.Include(b => b.costItems).ToList();
+            var budgetDtos = _mapper.Map<List<CostCategoryDto>>(budgets);
             return Ok(budgetDtos);
         }
 
-       
+        [HttpPost]
+        [AllowAnonymous]
+        public ActionResult Post([FromBody] CostCategoryDto model)
+        {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
+
+            var costCategory = _mapper.Map<CostCategory>(model);
+            var id = Guid.NewGuid().ToString();
+            costCategory.costCategoryId = id;
+
+            double totalAmount = 0;
+            foreach (CostItem i in costCategory.costItems)
+            {
+                i.costItemId = Guid.NewGuid().ToString();
+                totalAmount += i.amount;
+            }
+
+            costCategory.totalAmount = totalAmount;
+            _budgetContext.CostCategories.Add(costCategory);
+
+            _budgetContext.SaveChanges();
+
+            return Created($"api/costCategory/{id}", null);
+        }
+
+        [HttpDelete("{costCategoryId}")]
+        [AllowAnonymous]
+        public ActionResult Delete(string costCategoryId)
+        {
+
+            var costCategory = _budgetContext.CostCategories.FirstOrDefault(c => c.costCategoryId.Replace(" ", "-") == costCategoryId.ToLower());
+            if (costCategory == null)
+            {
+                return NotFound();
+            }
+            _budgetContext.Remove(costCategory);
 
 
+            _budgetContext.SaveChanges();
+
+            return NoContent();
+        }
     }
 }

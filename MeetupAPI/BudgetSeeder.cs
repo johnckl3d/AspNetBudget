@@ -20,7 +20,7 @@ namespace MeetupAPI
         {
             if (_budgetContext.Database.CanConnect())
             {
-                if (!_budgetContext.Budgets.Any())
+                if (!_budgetContext.CostCategories.Any())
                 {
                     InsertSampleData();
                 }
@@ -110,16 +110,7 @@ namespace MeetupAPI
                  {
                         costCategoryId = "ce9103a4-e331-45ea-9bac-54a693de3bfb",
                      name = "Food",
-                       totalAmount = 10.50,
-                     costItems = new List<CostItem>
-                    {
-                          new CostItem
-                        {
-                               costItemId = "cb4bf545-176b-4453-94c5-45262a9fd8c2",
-                           name = "lunch",
-                           amount = 10.50,
-                        },
-                     }
+                       totalAmount = 10.50
                    }
         };
             _budgetContext.AddRange(budgets);

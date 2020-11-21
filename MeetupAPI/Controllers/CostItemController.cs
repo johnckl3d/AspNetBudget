@@ -38,15 +38,23 @@ namespace MeetupAPI.Controllers
                 return BadRequest(ModelState);
             }
 
-            var budget = _budgetContext.Budgets.Include(b => b.costItems).FirstOrDefault(c => c.costCategoryId.Replace(" ", "-") == costCategoryId.ToLower());
-            if (budget == null)
+            var costCategory = _budgetContext.CostCategories.Include(b => b.costItems).FirstOrDefault(c => c.costCategoryId.Replace(" ", "-") == costCategoryId.ToLower());
+            if (costCategory == null)
             {
                 return NotFound();
             }
 
             var costItem = _mapper.Map<CostItem>(model);
             costItem.costItemId = Guid.NewGuid().ToString();
-            budget.costItems.Add(costItem);
+            costCategory.costItems.Add(costItem);
+
+            double totalAmount = 0;
+            foreach (CostItem i in costCategory.costItems)
+            {
+                totalAmount += i.amount;
+            }
+            costCategory.totalAmount = totalAmount;
+
             _budgetContext.SaveChanges();
 
             return Created($"api/costItem/{costCategoryId}", null);
@@ -56,17 +64,21 @@ namespace MeetupAPI.Controllers
         [AllowAnonymous]
         public ActionResult Delete(string costCategoryId)
         {
-            if (!ModelState.IsValid)
-            {
-                return BadRequest(ModelState);
-            }
 
-            var budget = _budgetContext.Budgets.Include(b => b.costItems).FirstOrDefault(c => c.costCategoryId.Replace(" ", "-") == costCategoryId.ToLower());
-            if (budget == null)
+            var costCategory = _budgetContext.CostCategories.Include(b => b.costItems).FirstOrDefault(c => c.costCategoryId.Replace(" ", "-") == costCategoryId.ToLower());
+            if (costCategory == null)
             {
                 return NotFound();
             }
-            _budgetContext.CostItems.RemoveRange(budget.costItems);
+            _budgetContext.CostItems.RemoveRange(costCategory.costItems);
+
+            double totalAmount = 0;
+            foreach (CostItem i in costCategory.costItems)
+            {
+                totalAmount += i.amount;
+            }
+            costCategory.totalAmount = totalAmount;
+
             _budgetContext.SaveChanges();
 
             return NoContent();
@@ -76,26 +88,31 @@ namespace MeetupAPI.Controllers
         [AllowAnonymous]
         public ActionResult Delete(string costCategoryId, string costItemId)
         {
-            if (!ModelState.IsValid)
-            {
-                return BadRequest(ModelState);
-            }
-
-            var budget = _budgetContext.Budgets.Include(b => b.costItems).FirstOrDefault(c => c.costCategoryId.Replace(" ", "-") == costCategoryId.ToLower());
-            if (budget == null)
+            var costCategory = _budgetContext.CostCategories.Include(b => b.costItems).FirstOrDefault(c => c.costCategoryId.Replace(" ", "-") == costCategoryId.ToLower());
+            if (costCategory == null)
             {
                 return NotFound();
             }
-            var costItem = budget.costItems.FirstOrDefault(c => c.costItemId == costItemId);
+            var costItem = costCategory.costItems.FirstOrDefault(c => c.costItemId == costItemId);
 
             if(costItem == null)
             {
                 return NotFound();
             }
             _budgetContext.CostItems.Remove(costItem);
-            _budgetContext.SaveChanges();
 
+            double totalAmount = 0;
+            foreach (CostItem i in costCategory.costItems)
+            {
+                totalAmount += i.amount;
+            }
+            costCategory.totalAmount = totalAmount;
+
+            _budgetContext.SaveChanges();
+            
             return NoContent();
         }
+
+
     }
 }

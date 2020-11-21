@@ -5,7 +5,7 @@ using System.Threading.Tasks;
 
 namespace MeetupAPI.Models
 {
-    public class CostCategoryDetailsDto
+    public class CostCategoryDto
     {
         public string costCategoryId { get; set; }
         public string name { get; set; }
