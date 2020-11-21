@@ -94,14 +94,14 @@ namespace MeetupAPI
                     {
                           new CostItem
                         {
-
-                           Name = "electric",
+                              costItemId = "cb4bf545-176b-4453-94c5-45262a9fd8c4",
+                           name = "electric",
                            Amount = 400.50,
                         },
                              new CostItem
                         {
-
-                           Name = "water",
+                                   costItemId = "cb4bf545-176b-4453-94c5-45262a9fd8c3",
+                           name = "water",
                            Amount = 30.50,
                         },
                      }
@@ -115,8 +115,8 @@ namespace MeetupAPI
                     {
                           new CostItem
                         {
-
-                           Name = "lunch",
+                               costItemId = "cb4bf545-176b-4453-94c5-45262a9fd8c2",
+                           name = "lunch",
                            Amount = 10.50,
                         },
                      }
