@@ -3,23 +3,21 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace MeetupAPI.Migrations
 {
-    public partial class renameCostCategory : Migration
+    public partial class renameCostCategory1 : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.CreateTable(
-                name: "Budgets",
+                name: "CostCategories",
                 columns: table => new
                 {
-                    Id = table.Column<int>(nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
+                    costCategoryId = table.Column<string>(nullable: false),
                     name = table.Column<string>(nullable: true),
-                    costCategoryId = table.Column<string>(nullable: true),
                     totalAmount = table.Column<double>(nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Budgets", x => x.Id);
+                    table.PrimaryKey("PK_CostCategories", x => x.costCategoryId);
                 });
 
             migrationBuilder.CreateTable(
@@ -39,22 +37,20 @@ namespace MeetupAPI.Migrations
                 name: "CostItems",
                 columns: table => new
                 {
-                    Id = table.Column<int>(nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
-                    costItemId = table.Column<string>(nullable: true),
+                    costItemId = table.Column<string>(nullable: false),
                     name = table.Column<string>(nullable: true),
-                    costCategoryId = table.Column<int>(nullable: false),
+                    costCategoryId = table.Column<string>(nullable: true),
                     amount = table.Column<double>(nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_CostItems", x => x.Id);
+                    table.PrimaryKey("PK_CostItems", x => x.costItemId);
                     table.ForeignKey(
-                        name: "FK_CostItems_Budgets_costCategoryId",
+                        name: "FK_CostItems_CostCategories_costCategoryId",
                         column: x => x.costCategoryId,
-                        principalTable: "Budgets",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Restrict);
+                        principalTable: "CostCategories",
+                        principalColumn: "costCategoryId",
+                        onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
@@ -70,16 +66,16 @@ namespace MeetupAPI.Migrations
                     DateOfBirth = table.Column<DateTime>(nullable: true),
                     PasswordHash = table.Column<string>(nullable: true),
                     RoleId = table.Column<int>(nullable: false),
-                    BudgetId = table.Column<int>(nullable: true)
+                    BudgetcostCategoryId = table.Column<string>(nullable: true)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_Users", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_Users_Budgets_BudgetId",
-                        column: x => x.BudgetId,
-                        principalTable: "Budgets",
-                        principalColumn: "Id",
+                        name: "FK_Users_CostCategories_BudgetcostCategoryId",
+                        column: x => x.BudgetcostCategoryId,
+                        principalTable: "CostCategories",
+                        principalColumn: "costCategoryId",
                         onDelete: ReferentialAction.Restrict);
                     table.ForeignKey(
                         name: "FK_Users_Roles_RoleId",
@@ -178,9 +174,9 @@ namespace MeetupAPI.Migrations
                 column: "CreatedById");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Users_BudgetId",
+                name: "IX_Users_BudgetcostCategoryId",
                 table: "Users",
-                column: "BudgetId");
+                column: "BudgetcostCategoryId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Users_RoleId",
@@ -206,7 +202,7 @@ namespace MeetupAPI.Migrations
                 name: "Users");
 
             migrationBuilder.DropTable(
-                name: "Budgets");
+                name: "CostCategories");
 
             migrationBuilder.DropTable(
                 name: "Roles");

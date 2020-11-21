@@ -97,12 +97,14 @@ namespace MeetupAPI
                               costItemId = "cb4bf545-176b-4453-94c5-45262a9fd8c4",
                            name = "electric",
                            amount = 400.50,
+                            costCategoryId = "a4f10e4c-70cb-44ae-985b-32f13cf9429f",
                         },
                              new CostItem
                         {
                                    costItemId = "cb4bf545-176b-4453-94c5-45262a9fd8c3",
                            name = "water",
                            amount = 30.50,
+                            costCategoryId = "a4f10e4c-70cb-44ae-985b-32f13cf9429f",
                         },
                      }
                    },

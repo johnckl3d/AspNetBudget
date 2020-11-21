@@ -21,13 +21,8 @@ namespace MeetupAPI.Migrations
 
             modelBuilder.Entity("MeetupAPI.Entities.CostCategory", b =>
                 {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
-
                     b.Property<string>("costCategoryId")
-                        .HasColumnType("nvarchar(max)");
+                        .HasColumnType("nvarchar(450)");
 
                     b.Property<string>("name")
                         .HasColumnType("nvarchar(max)");
@@ -35,31 +30,26 @@ namespace MeetupAPI.Migrations
                     b.Property<double>("totalAmount")
                         .HasColumnType("float");
 
-                    b.HasKey("Id");
+                    b.HasKey("costCategoryId");
 
                     b.ToTable("CostCategories");
                 });
 
             modelBuilder.Entity("MeetupAPI.Entities.CostItem", b =>
                 {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+                    b.Property<string>("costItemId")
+                        .HasColumnType("nvarchar(450)");
 
                     b.Property<double>("amount")
                         .HasColumnType("float");
 
-                    b.Property<int>("costCategoryId")
-                        .HasColumnType("int");
-
-                    b.Property<string>("costItemId")
-                        .HasColumnType("nvarchar(max)");
+                    b.Property<string>("costCategoryId")
+                        .HasColumnType("nvarchar(450)");
 
                     b.Property<string>("name")
                         .HasColumnType("nvarchar(max)");
 
-                    b.HasKey("Id");
+                    b.HasKey("costItemId");
 
                     b.HasIndex("costCategoryId");
 
@@ -170,8 +160,8 @@ namespace MeetupAPI.Migrations
                         .HasColumnType("int")
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
-                    b.Property<int?>("BudgetId")
-                        .HasColumnType("int");
+                    b.Property<string>("BudgetcostCategoryId")
+                        .HasColumnType("nvarchar(450)");
 
                     b.Property<DateTime?>("DateOfBirth")
                         .HasColumnType("datetime2");
@@ -196,7 +186,7 @@ namespace MeetupAPI.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("BudgetId");
+                    b.HasIndex("BudgetcostCategoryId");
 
                     b.HasIndex("RoleId");
 
@@ -208,8 +198,7 @@ namespace MeetupAPI.Migrations
                     b.HasOne("MeetupAPI.Entities.CostCategory", "costCategory")
                         .WithMany("costItems")
                         .HasForeignKey("costCategoryId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .OnDelete(DeleteBehavior.Cascade);
                 });
 
             modelBuilder.Entity("MeetupAPI.Entities.Lecture", b =>
@@ -241,7 +230,7 @@ namespace MeetupAPI.Migrations
                 {
                     b.HasOne("MeetupAPI.Entities.CostCategory", "Budget")
                         .WithMany()
-                        .HasForeignKey("BudgetId");
+                        .HasForeignKey("BudgetcostCategoryId");
 
                     b.HasOne("MeetupAPI.Entities.Role", "Role")
                         .WithMany()
