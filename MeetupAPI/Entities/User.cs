@@ -18,6 +18,6 @@ namespace MeetupAPI.Entities
         public int RoleId { get; set; }
         public Role Role  { get; set; }
 
-        public Budget Budget { get; set; }
+        public CostCategory Budget { get; set; }
     }
 }

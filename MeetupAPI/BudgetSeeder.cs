@@ -84,11 +84,11 @@ namespace MeetupAPI
                 },
             };
 
-            var budgets = new List<Budget> {
-                 new Budget
+            var budgets = new List<CostCategory> {
+                 new CostCategory
                  {
                      costCategoryId = "a4f10e4c-70cb-44ae-985b-32f13cf9429f",
-                     Name = "Utilities",
+                     name = "Utilities",
                      totalAmount = 431.00,
                      costItems = new List<CostItem>
                     {
@@ -96,20 +96,20 @@ namespace MeetupAPI
                         {
                               costItemId = "cb4bf545-176b-4453-94c5-45262a9fd8c4",
                            name = "electric",
-                           Amount = 400.50,
+                           amount = 400.50,
                         },
                              new CostItem
                         {
                                    costItemId = "cb4bf545-176b-4453-94c5-45262a9fd8c3",
                            name = "water",
-                           Amount = 30.50,
+                           amount = 30.50,
                         },
                      }
                    },
-                   new Budget
+                   new CostCategory
                  {
                         costCategoryId = "ce9103a4-e331-45ea-9bac-54a693de3bfb",
-                     Name = "Food",
+                     name = "Food",
                        totalAmount = 10.50,
                      costItems = new List<CostItem>
                     {
@@ -117,7 +117,7 @@ namespace MeetupAPI
                         {
                                costItemId = "cb4bf545-176b-4453-94c5-45262a9fd8c2",
                            name = "lunch",
-                           Amount = 10.50,
+                           amount = 10.50,
                         },
                      }
                    }

@@ -15,14 +15,14 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 namespace MeetupAPI.Controllers
 {
-    [Route("api/budget")]
+    [Route("api/costCategory")]
     [Authorize]
-    public class BudgetController : ControllerBase
+    public class CostCategoryController : ControllerBase
     {
         private readonly BudgetContext _budgetContext;
         private readonly IMapper _mapper;
         private readonly IAuthorizationService _authorizationService;
-        public BudgetController(BudgetContext budgetContext, IMapper mapper, IAuthorizationService authorizationService)
+        public CostCategoryController(BudgetContext budgetContext, IMapper mapper, IAuthorizationService authorizationService)
         {
             _budgetContext = budgetContext;
             _mapper = mapper;
@@ -31,11 +31,11 @@ namespace MeetupAPI.Controllers
 
         [HttpGet]
         [AllowAnonymous]
-        public ActionResult<List<BudgetDetailsDto>> Get()
+        public ActionResult<List<CostCategoryDetailsDto>> Get()
         {
            
             var budgets = _budgetContext.Budgets.Include(b => b.costItems).ToList();
-            var budgetDtos = _mapper.Map<List<BudgetDetailsDto>>(budgets);
+            var budgetDtos = _mapper.Map<List<CostCategoryDetailsDto>>(budgets);
             return Ok(budgetDtos);
         }
 

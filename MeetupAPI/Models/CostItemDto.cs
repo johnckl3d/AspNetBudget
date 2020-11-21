@@ -10,10 +10,10 @@ namespace MeetupAPI.Models
     public class CostItemDto
     {
         [Required]
-        public double Amount { get; set; }
+        public double amount { get; set; }
         [Required]
         [MinLength(5)]
-        public string Name { get; set; }
+        public string name { get; set; }
 
         [Required]
         public string costItemId { get; set; }

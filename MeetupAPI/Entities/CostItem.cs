@@ -14,8 +14,8 @@ namespace MeetupAPI.Entities
 
 
         [JsonIgnore]
-        public virtual Budget Budget{ get; set; }
-        public int BudgetId { get; set; }
-        public double Amount { get; set; }
+        public virtual CostCategory costCategory{ get; set; }
+        public int costCategoryId { get; set; }
+        public double amount { get; set; }
     }
 }

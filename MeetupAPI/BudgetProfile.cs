@@ -20,7 +20,7 @@ namespace MeetupAPI
 
             CreateMap<MeetupDto, Meetup>();
 
-            CreateMap<Budget, BudgetDetailsDto>();
+            CreateMap<CostCategory, CostCategoryDetailsDto>();
 
             CreateMap<CostItemDto, CostItem>().ReverseMap();
 

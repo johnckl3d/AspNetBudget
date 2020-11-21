@@ -19,17 +19,17 @@ namespace MeetupAPI.Migrations
                 .HasAnnotation("Relational:MaxIdentifierLength", 128)
                 .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
-            modelBuilder.Entity("MeetupAPI.Entities.Budget", b =>
+            modelBuilder.Entity("MeetupAPI.Entities.CostCategory", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int")
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
-                    b.Property<string>("Name")
+                    b.Property<string>("costCategoryId")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("costCategoryId")
+                    b.Property<string>("name")
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<double>("totalAmount")
@@ -47,10 +47,10 @@ namespace MeetupAPI.Migrations
                         .HasColumnType("int")
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
-                    b.Property<double>("Amount")
+                    b.Property<double>("amount")
                         .HasColumnType("float");
 
-                    b.Property<int>("BudgetId")
+                    b.Property<int>("costCategoryId")
                         .HasColumnType("int");
 
                     b.Property<string>("costItemId")
@@ -61,7 +61,7 @@ namespace MeetupAPI.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("BudgetId");
+                    b.HasIndex("costCategoryId");
 
                     b.ToTable("CostItems");
                 });
@@ -205,9 +205,9 @@ namespace MeetupAPI.Migrations
 
             modelBuilder.Entity("MeetupAPI.Entities.CostItem", b =>
                 {
-                    b.HasOne("MeetupAPI.Entities.Budget", "Budget")
+                    b.HasOne("MeetupAPI.Entities.CostCategory", "costCategory")
                         .WithMany("costItems")
-                        .HasForeignKey("BudgetId")
+                        .HasForeignKey("costCategoryId")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
                 });
@@ -239,7 +239,7 @@ namespace MeetupAPI.Migrations
 
             modelBuilder.Entity("MeetupAPI.Entities.User", b =>
                 {
-                    b.HasOne("MeetupAPI.Entities.Budget", "Budget")
+                    b.HasOne("MeetupAPI.Entities.CostCategory", "Budget")
                         .WithMany()
                         .HasForeignKey("BudgetId");
 

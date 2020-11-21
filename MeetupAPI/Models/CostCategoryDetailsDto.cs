@@ -5,13 +5,13 @@ using System.Threading.Tasks;
 
 namespace MeetupAPI.Models
 {
-    public class BudgetDetailsDto
+    public class CostCategoryDetailsDto
     {
         public string costCategoryId { get; set; }
-        public string Name { get; set; }
+        public string name { get; set; }
 
         public double totalAmount { get; set; }
-        public List<CostItemDto> CostItems { get; set; }
+        public List<CostItemDto> costItems { get; set; }
     }
 }
 

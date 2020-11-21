@@ -5,10 +5,10 @@ using System.Threading.Tasks;
 
 namespace MeetupAPI.Entities
 {
-    public class Budget
+    public class CostCategory
     {
         public int Id { get; set; }
-        public string Name { get; set; }
+        public string name { get; set; }
 
         public string costCategoryId { get; set; }
 
