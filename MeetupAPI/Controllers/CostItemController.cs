@@ -29,9 +29,30 @@ namespace MeetupAPI.Controllers
             _authorizationService = authorizationService;
         }
 
-        
+        [HttpPost]
+        [AllowAnonymous]
+        public ActionResult Post(string costCategoryId, [FromBody] CostItemDto model)
+        {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
 
-       [HttpDelete]
+            var budget = _budgetContext.Budgets.Include(b => b.costItems).FirstOrDefault(c => c.costCategoryId.Replace(" ", "-") == costCategoryId.ToLower());
+            if (budget == null)
+            {
+                return NotFound();
+            }
+
+            var costItem = _mapper.Map<CostItem>(model);
+            costItem.costItemId = Guid.NewGuid().ToString();
+            budget.costItems.Add(costItem);
+            _budgetContext.SaveChanges();
+
+            return Created($"api/costItem/{costCategoryId}", null);
+        }
+
+        [HttpDelete]
         [AllowAnonymous]
         public ActionResult Delete(string costCategoryId)
         {

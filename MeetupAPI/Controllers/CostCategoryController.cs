@@ -39,28 +39,7 @@ namespace MeetupAPI.Controllers
             return Ok(budgetDtos);
         }
 
-        [HttpPost]
-        [AllowAnonymous]
-        [Route("{costCategoryId}/costitem")]
-        public ActionResult Post(string costCategoryId, [FromBody] CostItemDto model)
-        {
-            if (!ModelState.IsValid)
-            {
-                return BadRequest(ModelState);
-            }
-
-            var budget = _budgetContext.Budgets.Include(b => b.costItems).FirstOrDefault(c => c.costCategoryId.Replace(" ", "-") == costCategoryId.ToLower());
-            if(budget == null)
-            {
-                return NotFound();
-            }
-
-            var costItem = _mapper.Map<CostItem>(model);
-            budget.costItems.Add(costItem);
-            _budgetContext.SaveChanges();
-
-            return Created($"api/budget/{costCategoryId}", null);
-        }
+       
 
 
     }
