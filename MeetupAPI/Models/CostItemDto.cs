@@ -15,7 +15,12 @@ namespace MeetupAPI.Models
         [MinLength(5)]
         public string name { get; set; }
 
-        public string costItemId { get; set; }
+        [Required]
+        public DateTime dateTime { get; set; }
+
+        public string description { get; set; }
+
+    public string costItemId { get; set; }
     }
 }
 

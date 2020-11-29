@@ -15,7 +15,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 namespace MeetupAPI.Controllers
 {
-    [Route("api/costItem/{costCategoryId}/costItem")]
+    [Route("api/costCategory/{costCategoryId}/costItem")]
     [Authorize]
     public class CostItemController : ControllerBase
     {
@@ -27,6 +27,21 @@ namespace MeetupAPI.Controllers
             _budgetContext = budgetContext;
             _mapper = mapper;
             _authorizationService = authorizationService;
+        }
+
+        [HttpGet]
+        [AllowAnonymous]
+        public ActionResult<List<CostItemDto>> Get(string costCategoryId)
+        {
+
+            var costCategory = _budgetContext.CostCategories.Include(b => b.costItems).FirstOrDefault(c => c.costCategoryId.Replace(" ", "-") == costCategoryId.ToLower());
+            if (costCategory == null)
+            {
+                return NotFound();
+            }
+            var costItems = costCategory.costItems.ToList();
+            var costItemDtos = _mapper.Map<List<CostItemDto>>(costItems);
+            return Ok(costItemDtos);
         }
 
         [HttpPost]
