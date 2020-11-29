@@ -19,9 +19,31 @@ namespace MeetupAPI.Migrations
                 .HasAnnotation("Relational:MaxIdentifierLength", 128)
                 .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
+            modelBuilder.Entity("MeetupAPI.Entities.Budget", b =>
+                {
+                    b.Property<string>("budgetId")
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<string>("name")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<double>("totalBudgetAmount")
+                        .HasColumnType("float");
+
+                    b.Property<double>("totalCostAmount")
+                        .HasColumnType("float");
+
+                    b.HasKey("budgetId");
+
+                    b.ToTable("Budgets");
+                });
+
             modelBuilder.Entity("MeetupAPI.Entities.CostCategory", b =>
                 {
                     b.Property<string>("costCategoryId")
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<string>("budgetId")
                         .HasColumnType("nvarchar(450)");
 
                     b.Property<string>("name")
@@ -31,6 +53,8 @@ namespace MeetupAPI.Migrations
                         .HasColumnType("float");
 
                     b.HasKey("costCategoryId");
+
+                    b.HasIndex("budgetId");
 
                     b.ToTable("CostCategories");
                 });
@@ -197,6 +221,14 @@ namespace MeetupAPI.Migrations
                     b.HasIndex("RoleId");
 
                     b.ToTable("Users");
+                });
+
+            modelBuilder.Entity("MeetupAPI.Entities.CostCategory", b =>
+                {
+                    b.HasOne("MeetupAPI.Entities.Budget", "budget")
+                        .WithMany("costCategories")
+                        .HasForeignKey("budgetId")
+                        .OnDelete(DeleteBehavior.Cascade);
                 });
 
             modelBuilder.Entity("MeetupAPI.Entities.CostItem", b =>

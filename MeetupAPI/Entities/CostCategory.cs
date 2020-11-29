@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Newtonsoft.Json;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -19,6 +20,9 @@ namespace MeetupAPI.Entities
         //public virtual User User { get; set; }
 
         //public int? UserId { get; set; }
+        [JsonIgnore]
+        public virtual Budget budget { get; set; }
+        public string budgetId { get; set; }
         public virtual List<CostItem> costItems { get; set; }
     }
 }

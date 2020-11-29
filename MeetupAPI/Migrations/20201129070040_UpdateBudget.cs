@@ -3,21 +3,22 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace MeetupAPI.Migrations
 {
-    public partial class renameCostCategory1 : Migration
+    public partial class UpdateBudget : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.CreateTable(
-                name: "CostCategories",
+                name: "Budgets",
                 columns: table => new
                 {
-                    costCategoryId = table.Column<string>(nullable: false),
+                    budgetId = table.Column<string>(nullable: false),
                     name = table.Column<string>(nullable: true),
-                    totalAmount = table.Column<double>(nullable: false)
+                    totalBudgetAmount = table.Column<double>(nullable: false),
+                    totalCostAmount = table.Column<double>(nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_CostCategories", x => x.costCategoryId);
+                    table.PrimaryKey("PK_Budgets", x => x.budgetId);
                 });
 
             migrationBuilder.CreateTable(
@@ -34,13 +35,35 @@ namespace MeetupAPI.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "CostCategories",
+                columns: table => new
+                {
+                    costCategoryId = table.Column<string>(nullable: false),
+                    name = table.Column<string>(nullable: true),
+                    totalAmount = table.Column<double>(nullable: false),
+                    budgetId = table.Column<string>(nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_CostCategories", x => x.costCategoryId);
+                    table.ForeignKey(
+                        name: "FK_CostCategories_Budgets_budgetId",
+                        column: x => x.budgetId,
+                        principalTable: "Budgets",
+                        principalColumn: "budgetId",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "CostItems",
                 columns: table => new
                 {
                     costItemId = table.Column<string>(nullable: false),
                     name = table.Column<string>(nullable: true),
                     costCategoryId = table.Column<string>(nullable: true),
-                    amount = table.Column<double>(nullable: false)
+                    amount = table.Column<double>(nullable: false),
+                    dateTime = table.Column<DateTime>(nullable: false),
+                    description = table.Column<string>(nullable: true)
                 },
                 constraints: table =>
                 {
@@ -153,6 +176,11 @@ namespace MeetupAPI.Migrations
                 });
 
             migrationBuilder.CreateIndex(
+                name: "IX_CostCategories_budgetId",
+                table: "CostCategories",
+                column: "budgetId");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_CostItems_costCategoryId",
                 table: "CostItems",
                 column: "costCategoryId");
@@ -206,6 +234,9 @@ namespace MeetupAPI.Migrations
 
             migrationBuilder.DropTable(
                 name: "Roles");
+
+            migrationBuilder.DropTable(
+                name: "Budgets");
         }
     }
 }

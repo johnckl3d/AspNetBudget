@@ -29,14 +29,21 @@ namespace MeetupAPI.Controllers
             _authorizationService = authorizationService;
         }
 
-        [HttpGet]
+        [HttpGet("{budgetId}")]
         [AllowAnonymous]
-        public ActionResult<List<CostCategoryDto>> Get()
+        public ActionResult<List<CostCategoryDto>> Get(string budgetId)
         {
+            if (budgetId == null)
+            {
+                return NotFound();
+            }
+            var budget = _budgetContext.Budgets
+                .Include(b => b.costCategories).ToList()
+                .FirstOrDefault(c => c.budgetId.Replace(" ", "-") == budgetId.ToLower());
 
-            var budgets = _budgetContext.CostCategories.Include(b => b.costItems).ToList();
-            var budgetDtos = _mapper.Map<List<CostCategoryDto>>(budgets);
-            return Ok(budgetDtos);
+            var budgetDto = _mapper.Map<Budget>(budget);
+            return Ok(budgetDto);
+            //return Ok();
         }
 
         [HttpPost]

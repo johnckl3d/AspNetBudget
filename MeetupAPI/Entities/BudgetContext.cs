@@ -19,6 +19,8 @@ namespace MeetupAPI.Entities
         public DbSet<Location> Locations { get; set; }
         public DbSet<Lecture> Lectures { get; set; }
 
+        public DbSet<Budget> Budgets { get; set; }
+
         public DbSet<CostCategory> CostCategories { get; set; }
 
         public DbSet<CostItem> CostItems { get; set; }
@@ -46,7 +48,11 @@ namespace MeetupAPI.Entities
              .WithOne(b => b.User)
             .HasForeignKey<Budget>(b => b.UserId);
             */
-            
+            modelBuilder.Entity<Budget>()
+              .HasMany<CostCategory>(c => c.costCategories)
+              .WithOne(b => b.budget)
+                .HasForeignKey(c => c.budgetId)
+              .OnDelete(DeleteBehavior.Cascade);
 
             modelBuilder.Entity<CostCategory>()
                .HasMany<CostItem>(c => c.costItems)

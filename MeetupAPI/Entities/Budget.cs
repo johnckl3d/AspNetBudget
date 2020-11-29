@@ -17,7 +17,6 @@ namespace MeetupAPI.Entities
         //public virtual User User { get; set; }
 
         //public int? UserId { get; set; }
-        public virtual List<CostSnapshot> costSnapshots { get; set; }
         public virtual List<CostCategory> costCategories { get; set; }
     }
 }

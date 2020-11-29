@@ -20,6 +20,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
+using Newtonsoft.Json;
 
 namespace MeetupAPI
 {
@@ -66,7 +67,10 @@ namespace MeetupAPI
             services.AddScoped<IAuthorizationHandler, MinimumAgeHandler>();
             services.AddScoped<IJwtProvider, JwtProvider>();
             services.AddScoped<IPasswordHasher<User>, PasswordHasher<User>>();
-            services.AddControllers(options => options.Filters.Add(typeof(ExceptionFilter))).AddFluentValidation();
+            services.AddControllers(options => options.Filters.Add(typeof(ExceptionFilter))).AddFluentValidation().AddNewtonsoftJson(
+          options => {
+              options.SerializerSettings.ReferenceLoopHandling = ReferenceLoopHandling.Ignore;
+          });
             services.AddScoped<IValidator<RegisterUserDto>, RegisterUserValidator>(); 
 
             services.AddDbContext<BudgetContext>(options => options.UseSqlServer(Configuration.GetConnectionString("DefaultConnection")));
