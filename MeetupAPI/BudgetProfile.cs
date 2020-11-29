@@ -18,6 +18,7 @@ namespace MeetupAPI
                 .ForMember(m => m.PostCode, map => map.MapFrom(meetup => meetup.Location.PostCode))
                 .ForMember(m => m.Street, map => map.MapFrom(meetup => meetup.Location.Street));
 
+
             CreateMap<MeetupDto, Meetup>();
 
             CreateMap<BudgetDto, Budget>().ReverseMap();
@@ -25,6 +26,8 @@ namespace MeetupAPI
             CreateMap<CostCategoryDto, CostCategory>().ReverseMap();
 
             CreateMap<CostItemDto, CostItem>().ReverseMap();
+
+            CreateMap<CostSnapShotDto, CostSnapShot>().ReverseMap();
 
             CreateMap<LectureDto, Lecture>()
                 .ReverseMap();

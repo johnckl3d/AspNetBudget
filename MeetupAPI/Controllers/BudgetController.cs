@@ -13,6 +13,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
+
 namespace MeetupAPI.Controllers
 {
     [Route("api/budget")]
@@ -31,20 +32,35 @@ namespace MeetupAPI.Controllers
 
         [HttpGet("{budgetId}")]
         [AllowAnonymous]
-        public ActionResult<List<CostCategoryDto>> Get(string budgetId)
+        public ActionResult<List<BudgetDto>> Get(string budgetId)
         {
             if (budgetId == null)
             {
                 return NotFound();
             }
             var budget = _budgetContext.Budgets
-                .Include(b => b.costCategories).ToList()
+                .Include(c => c.costCategories)
+               .ThenInclude(i => i.costItems).ToList()
                 .FirstOrDefault(c => c.budgetId.Replace(" ", "-") == budgetId.ToLower());
 
             var budgetDto = _mapper.Map<Budget>(budget);
-            return Ok(budgetDto);
+            BudgetResponseDto result = new BudgetResponseDto(budgetDto.name, budgetDto.name, budgetDto.totalBudgetAmount, budgetDto.totalCostAmount, new List<CostSnapShotDto>(), budgetDto.costCategories);
+            foreach (CostCategory c in budgetDto.costCategories)
+            {
+                if (c.costItems != null)
+                {
+                    foreach (CostItem i in c.costItems)
+                    {
+                        CostSnapShotDto s = new CostSnapShotDto(i.dateTime, i.amount);
+                        result.AddCostSnapShot(s);
+                    }
+
+                }
+            }
+            return Ok(result);
             //return Ok();
         }
+
 
         [HttpPost]
         [AllowAnonymous]

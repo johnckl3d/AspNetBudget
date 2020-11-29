@@ -29,15 +29,7 @@ namespace MeetupAPI
 
         private void InsertSampleData()
         {
-           
-            var costCategories1 = new List<CostCategory> {
-                 new CostCategory
-                 {
-                     costCategoryId = "a4f10e4c-70cb-44ae-985b-32f13cf9429f",
-                     name = "Utilities",
-                     totalAmount = 431.00,
-                     budgetId = "b4f10e4c-70cb-44ae-985b-32f13cf9429f",
-                     costItems = new List<CostItem>
+            var costItems = new List<CostItem>
                     {
                           new CostItem
                         {
@@ -45,15 +37,27 @@ namespace MeetupAPI
                            name = "electric",
                            amount = 400.50,
                             costCategoryId = "a4f10e4c-70cb-44ae-985b-32f13cf9429f",
-                        },
+                            dateTime = new DateTime(2020, 11, 18),
+                            description = "821123145081"
+        },
                              new CostItem
                         {
                                    costItemId = "cb4bf545-176b-4453-94c5-45262a9fd8c3",
                            name = "water",
                            amount = 30.50,
                             costCategoryId = "a4f10e4c-70cb-44ae-985b-32f13cf9429f",
+                              dateTime = new DateTime(2020, 11, 19),
+                            description = "821123145081"
                         },
-                     }
+                     };
+            var costCategories1 = new List<CostCategory> {
+                 new CostCategory
+                 {
+                     costCategoryId = "a4f10e4c-70cb-44ae-985b-32f13cf9429f",
+                     name = "Utilities",
+                     totalAmount = 431.00,
+                     budgetId = "b4f10e4c-70cb-44ae-985b-32f13cf9429f",
+                     costItems = costItems
                    }
             };
 

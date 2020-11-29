@@ -5,10 +5,17 @@ using System.Threading.Tasks;
 
 namespace MeetupAPI.Models
 {
-    public class CostSnapshotDto
+    public class CostSnapShotDto
     {
+        public CostSnapShotDto(DateTime dateTime, double amount)
+        {
+            this.dateTime = dateTime;
+            this.amount = amount;
+        }
+
         public DateTime dateTime { get; set; }
 
-        public double totalCostAmount { get; set; }
+        public double amount { get; set; }
+
     }
 }
