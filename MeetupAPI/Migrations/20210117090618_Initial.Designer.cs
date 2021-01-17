@@ -10,8 +10,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace MeetupAPI.Migrations
 {
     [DbContext(typeof(BudgetContext))]
-    [Migration("20201129070040_UpdateBudget")]
-    partial class UpdateBudget
+    [Migration("20210117090618_Initial")]
+    partial class Initial
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {

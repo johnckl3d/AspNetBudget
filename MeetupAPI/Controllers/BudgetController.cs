@@ -30,6 +30,40 @@ namespace MeetupAPI.Controllers
             _authorizationService = authorizationService;
         }
 
+        [HttpGet]
+        [AllowAnonymous]
+        public ActionResult<List<BudgetDto>> Get()
+        {
+            var budget = _budgetContext.Budgets
+                .Include(c => c.costCategories)
+               .ThenInclude(i => i.costItems).ToList();
+
+            //var budgetDto = _mapper.Map<Budget>(budget);
+            List<BudgetDto> budgetDtoList =
+    _mapper.Map<List<Budget>, List<BudgetDto>>(budget);
+            List<BudgetResponseDto> result = new List<BudgetResponseDto>();
+            foreach (BudgetDto item in budgetDtoList)
+            {
+
+                BudgetResponseDto responseDto = new BudgetResponseDto(item.name, item.name, item.totalBudgetAmount, item.totalCostAmount, new List<CostSnapShotDto>(), new List<CostCategory>());
+                foreach (var c in item.costCategories)
+                {
+                    if (c.costItems != null)
+                    {
+                        foreach (var i in c.costItems)
+                        {
+                            CostSnapShotDto s = new CostSnapShotDto(i.dateTime, i.amount);
+                            responseDto.AddCostSnapShot(s);
+                        }
+                        responseDto.ReorderSnapshotsByDateTime();
+                    }
+                }
+                result.Add(responseDto);
+            }
+            //return Ok();
+            return Ok(result);
+        }
+
         [HttpGet("{budgetId}")]
         [AllowAnonymous]
         public ActionResult<List<BudgetDto>> Get(string budgetId)
@@ -54,7 +88,7 @@ namespace MeetupAPI.Controllers
                         CostSnapShotDto s = new CostSnapShotDto(i.dateTime, i.amount);
                         result.AddCostSnapShot(s);
                     }
-
+                    result.ReorderSnapshotsByDateTime();
                 }
             }
             return Ok(result);

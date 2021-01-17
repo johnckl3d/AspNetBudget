@@ -27,11 +27,23 @@ namespace MeetupAPI.Models
             totalCostAmount = _totalCostAmount;
             costSnapShots = _costSnapShots;
             costCategories = _costCategories;
-            this.costSnapShots = new List<CostSnapShotDto>();
+            costSnapShots = new List<CostSnapShotDto>();
         }
+
+        public void AddCostCategory(CostCategory item)
+        {
+            costCategories.Add(item);
+        }
+
         public void AddCostSnapShot(CostSnapShotDto snapShot)
         {
             costSnapShots.Add(snapShot);
         }
+
+        public void ReorderSnapshotsByDateTime()
+        {
+            costSnapShots.Sort((x, y) => DateTime.Compare(x.dateTime, y.dateTime));
+        }
+
     }
 }
