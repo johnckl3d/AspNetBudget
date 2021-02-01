@@ -78,14 +78,14 @@ namespace MeetupAPI.Controllers
                .ThenInclude(i => i.costItems).ToList()
                 .FirstOrDefault(c => c.budgetId.Replace(" ", "-") == budgetId.ToLower());
 
-            var budgetDto = _mapper.Map<Budget>(budget);
+            var budgetDto = _mapper.Map<BudgetDto>(budget);
             BudgetResponseDto result = new BudgetResponseDto(budgetDto.name, budgetDto.name, budgetDto.totalBudgetAmount, budgetDto.totalCostAmount, new List<CostSnapShotDto>(), new List<CostCategoryDto>());
             foreach (var c in budgetDto.costCategories)
             {
                 result.AddCostCategory(c);
                 if (c.costItems != null)
                 {
-                    foreach (CostItem i in c.costItems)
+                    foreach (CostItemDto i in c.costItems)
                     {
                         CostSnapShotDto s = new CostSnapShotDto(i.dateTime, i.amount);
                         result.AddCostSnapShot(s);
