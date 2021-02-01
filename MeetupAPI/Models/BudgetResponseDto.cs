@@ -16,10 +16,10 @@ namespace MeetupAPI.Models
 
         public List<CostSnapShotDto> costSnapShots { get; set; }
 
-        public List<CostCategory> costCategories { get; set; }
+        public List<CostCategoryDto> costCategories { get; set; }
 
 
-        public BudgetResponseDto(string _budgetId, string _name, double _totalBudgetAmount, double _totalCostAmount, List<CostSnapShotDto> _costSnapShots, List<CostCategory> _costCategories)
+        public BudgetResponseDto(string _budgetId, string _name, double _totalBudgetAmount, double _totalCostAmount, List<CostSnapShotDto> _costSnapShots, List<CostCategoryDto> _costCategories)
         {
             budgetId = _budgetId;
             name = _name;
@@ -30,7 +30,7 @@ namespace MeetupAPI.Models
             costSnapShots = new List<CostSnapShotDto>();
         }
 
-        public void AddCostCategory(CostCategory item)
+        public void AddCostCategory(CostCategoryDto item)
         {
             costCategories.Add(item);
         }
