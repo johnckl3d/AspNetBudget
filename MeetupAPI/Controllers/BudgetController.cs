@@ -100,30 +100,23 @@ namespace MeetupAPI.Controllers
 
         [HttpPost]
         [AllowAnonymous]
-        public ActionResult Post([FromBody] CostCategoryDto model)
+        public ActionResult Post([FromBody] BudgetDto model)
         {
             if (!ModelState.IsValid)
             {
                 return BadRequest(ModelState);
             }
 
-            var costCategory = _mapper.Map<CostCategory>(model);
+            var budget = _mapper.Map<Budget>(model);
             var id = Guid.NewGuid().ToString();
-            costCategory.costCategoryId = id;
+            budget.budgetId = id;
 
-            double totalAmount = 0;
-            foreach (CostItem i in costCategory.costItems)
-            {
-                i.costItemId = Guid.NewGuid().ToString();
-                totalAmount += i.amount;
-            }
-
-            costCategory.totalAmount = totalAmount;
-            _budgetContext.CostCategories.Add(costCategory);
+            
+            _budgetContext.Add(budget);
 
             _budgetContext.SaveChanges();
 
-            return Created($"api/costCategory/{id}", null);
+            return Created($"api/budget/{id}", null);
         }
 
         [HttpDelete("{costCategoryId}")]
