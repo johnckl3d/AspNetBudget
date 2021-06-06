@@ -45,7 +45,7 @@ namespace MeetupAPI.Controllers
             foreach (BudgetDto item in budgetDtoList)
             {
 
-                BudgetResponseDto responseDto = new BudgetResponseDto(item.budgetId, item.name, item.totalBudgetAmount, item.totalCostAmount, new List<CostSnapShotDto>(), new List<CostCategoryDto>());
+                BudgetResponseDto responseDto = new BudgetResponseDto(item.budgetId, item.name, item.description, item.totalBudgetAmount, item.totalCostAmount, new List<CostSnapShotDto>(), new List<CostCategoryDto>());
                 foreach (var c in item.costCategories)
                 {
                     responseDto.AddCostCategory(c);
@@ -79,7 +79,7 @@ namespace MeetupAPI.Controllers
                 .FirstOrDefault(c => c.budgetId.Replace(" ", "-") == budgetId.ToLower());
 
             var budgetDto = _mapper.Map<BudgetDto>(budget);
-            BudgetResponseDto result = new BudgetResponseDto(budgetDto.name, budgetDto.name, budgetDto.totalBudgetAmount, budgetDto.totalCostAmount, new List<CostSnapShotDto>(), new List<CostCategoryDto>());
+            BudgetResponseDto result = new BudgetResponseDto(budgetDto.name, budgetDto.name, budgetDto.description, budgetDto.totalBudgetAmount, budgetDto.totalCostAmount, new List<CostSnapShotDto>(), new List<CostCategoryDto>());
             foreach (var c in budgetDto.costCategories)
             {
                 result.AddCostCategory(c);

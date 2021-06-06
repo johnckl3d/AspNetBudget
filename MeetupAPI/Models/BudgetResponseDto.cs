@@ -11,6 +11,7 @@ namespace MeetupAPI.Models
     {
         public string budgetId { get; set; }
         public string name { get; set; }
+        public string description { get; set; }
         public double totalBudgetAmount { get; set; }
         public double totalCostAmount { get; set; }
 
@@ -19,10 +20,11 @@ namespace MeetupAPI.Models
         public List<CostCategoryDto> costCategories { get; set; }
 
 
-        public BudgetResponseDto(string _budgetId, string _name, double _totalBudgetAmount, double _totalCostAmount, List<CostSnapShotDto> _costSnapShots, List<CostCategoryDto> _costCategories)
+        public BudgetResponseDto(string _budgetId, string _name, string _description, double _totalBudgetAmount, double _totalCostAmount, List<CostSnapShotDto> _costSnapShots, List<CostCategoryDto> _costCategories)
         {
             budgetId = _budgetId;
             name = _name;
+            description = _description;
             totalBudgetAmount = _totalBudgetAmount;
             totalCostAmount = _totalCostAmount;
             costSnapShots = _costSnapShots;
