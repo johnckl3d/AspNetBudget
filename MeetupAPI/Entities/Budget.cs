@@ -13,6 +13,7 @@ namespace MeetupAPI.Entities
         [Key]
         public string budgetId { get; set; }
         public string name { get; set; }
+        public string description { get; set; }
         public double totalBudgetAmount { get; set; }
         public double totalCostAmount { get; set; }
 

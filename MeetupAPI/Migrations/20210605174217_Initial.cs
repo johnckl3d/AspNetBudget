@@ -13,6 +13,7 @@ namespace MeetupAPI.Migrations
                 {
                     budgetId = table.Column<string>(nullable: false),
                     name = table.Column<string>(nullable: true),
+                    description = table.Column<string>(nullable: true),
                     totalBudgetAmount = table.Column<double>(nullable: false),
                     totalCostAmount = table.Column<double>(nullable: false)
                 },

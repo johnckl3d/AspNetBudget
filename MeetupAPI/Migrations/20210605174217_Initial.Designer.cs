@@ -10,7 +10,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace MeetupAPI.Migrations
 {
     [DbContext(typeof(BudgetContext))]
-    [Migration("20210117090618_Initial")]
+    [Migration("20210605174217_Initial")]
     partial class Initial
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -25,6 +25,9 @@ namespace MeetupAPI.Migrations
                 {
                     b.Property<string>("budgetId")
                         .HasColumnType("nvarchar(450)");
+
+                    b.Property<string>("description")
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("name")
                         .HasColumnType("nvarchar(max)");

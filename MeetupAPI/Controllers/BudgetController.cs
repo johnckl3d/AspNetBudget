@@ -45,7 +45,7 @@ namespace MeetupAPI.Controllers
             foreach (BudgetDto item in budgetDtoList)
             {
 
-                BudgetResponseDto responseDto = new BudgetResponseDto(item.name, item.name, item.totalBudgetAmount, item.totalCostAmount, new List<CostSnapShotDto>(), new List<CostCategoryDto>());
+                BudgetResponseDto responseDto = new BudgetResponseDto(item.budgetId, item.name, item.totalBudgetAmount, item.totalCostAmount, new List<CostSnapShotDto>(), new List<CostCategoryDto>());
                 foreach (var c in item.costCategories)
                 {
                     responseDto.AddCostCategory(c);
@@ -119,22 +119,42 @@ namespace MeetupAPI.Controllers
             return Created($"api/budget/{id}", null);
         }
 
-        [HttpDelete("{costCategoryId}")]
-        [AllowAnonymous]
-        public ActionResult Delete(string costCategoryId)
-        {
 
-            var costCategory = _budgetContext.CostCategories.FirstOrDefault(c => c.costCategoryId.Replace(" ", "-") == costCategoryId.ToLower());
-            if (costCategory == null)
+        [HttpDelete("{budgetId}")]
+        [AllowAnonymous]
+        public ActionResult Delete(string budgetId)
+        {
+            Console.WriteLine("Delete");
+            var budget = _budgetContext.Budgets.FirstOrDefault(c => c.budgetId.Replace(" ", "-") == budgetId);
+            if (budget == null)
             {
+                Console.WriteLine("not found");
                 return NotFound();
             }
-            _budgetContext.Remove(costCategory);
+            _budgetContext.Remove(budget);
 
 
             _budgetContext.SaveChanges();
 
             return NoContent();
         }
+
+        //[HttpDelete("{costCategoryId}")]
+        //[AllowAnonymous]
+        //public ActionResult Delete(string costCategoryId)
+        //{
+
+        //    var costCategory = _budgetContext.CostCategories.FirstOrDefault(c => c.costCategoryId.Replace(" ", "-") == costCategoryId.ToLower());
+        //    if (costCategory == null)
+        //    {
+        //        return NotFound();
+        //    }
+        //    _budgetContext.Remove(costCategory);
+
+
+        //    _budgetContext.SaveChanges();
+
+        //    return NoContent();
+        //}
     }
 }
