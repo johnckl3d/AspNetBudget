@@ -47,7 +47,16 @@ namespace MeetupAPI.Controllers
             {
                 return BadRequest(ModelState);
             }
-
+            if (model.budgetId == null)
+            {
+                return NotFound();
+            }
+            var budget = _budgetContext.Budgets
+                .FirstOrDefault(c => c.budgetId.Replace(" ", "-") == model.budgetId.ToLower());
+            if (budget == null)
+            {
+                return NotFound();
+            }
             var costCategory = _mapper.Map<CostCategory>(model);
             var id = Guid.NewGuid().ToString();
             costCategory.costCategoryId = id;

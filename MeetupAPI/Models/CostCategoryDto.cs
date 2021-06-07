@@ -11,6 +11,8 @@ namespace MeetupAPI.Models
         public string name { get; set; }
 
         public double totalAmount { get; set; }
+
+        public string budgetId { get; set; }
         public List<CostItemDto> costItems { get; set; }
     }
 }
