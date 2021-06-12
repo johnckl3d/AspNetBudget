@@ -3,7 +3,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace MeetupAPI.Migrations
 {
-    public partial class Initial : Migration
+    public partial class User : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -56,6 +56,28 @@ namespace MeetupAPI.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "Users",
+                columns: table => new
+                {
+                    userId = table.Column<string>(nullable: false),
+                    email = table.Column<string>(nullable: true),
+                    firstName = table.Column<string>(nullable: true),
+                    lastName = table.Column<string>(nullable: true),
+                    passwordHash = table.Column<string>(nullable: true),
+                    roleId = table.Column<int>(nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Users", x => x.userId);
+                    table.ForeignKey(
+                        name: "FK_Users_Roles_roleId",
+                        column: x => x.roleId,
+                        principalTable: "Roles",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "CostItems",
                 columns: table => new
                 {
@@ -78,38 +100,6 @@ namespace MeetupAPI.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "Users",
-                columns: table => new
-                {
-                    Id = table.Column<int>(nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
-                    Email = table.Column<string>(nullable: true),
-                    FirstName = table.Column<string>(nullable: true),
-                    LastName = table.Column<string>(nullable: true),
-                    Nationality = table.Column<string>(nullable: true),
-                    DateOfBirth = table.Column<DateTime>(nullable: true),
-                    PasswordHash = table.Column<string>(nullable: true),
-                    RoleId = table.Column<int>(nullable: false),
-                    BudgetcostCategoryId = table.Column<string>(nullable: true)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_Users", x => x.Id);
-                    table.ForeignKey(
-                        name: "FK_Users_CostCategories_BudgetcostCategoryId",
-                        column: x => x.BudgetcostCategoryId,
-                        principalTable: "CostCategories",
-                        principalColumn: "costCategoryId",
-                        onDelete: ReferentialAction.Restrict);
-                    table.ForeignKey(
-                        name: "FK_Users_Roles_RoleId",
-                        column: x => x.RoleId,
-                        principalTable: "Roles",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
-                });
-
-            migrationBuilder.CreateTable(
                 name: "Meetups",
                 columns: table => new
                 {
@@ -119,16 +109,17 @@ namespace MeetupAPI.Migrations
                     Organizer = table.Column<string>(nullable: true),
                     Date = table.Column<DateTime>(nullable: false),
                     IsPrivate = table.Column<bool>(nullable: false),
-                    CreatedById = table.Column<int>(nullable: true)
+                    CreatedById = table.Column<int>(nullable: true),
+                    CreatedByuserId = table.Column<string>(nullable: true)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_Meetups", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_Meetups_Users_CreatedById",
-                        column: x => x.CreatedById,
+                        name: "FK_Meetups_Users_CreatedByuserId",
+                        column: x => x.CreatedByuserId,
                         principalTable: "Users",
-                        principalColumn: "Id",
+                        principalColumn: "userId",
                         onDelete: ReferentialAction.Restrict);
                 });
 
@@ -198,19 +189,14 @@ namespace MeetupAPI.Migrations
                 unique: true);
 
             migrationBuilder.CreateIndex(
-                name: "IX_Meetups_CreatedById",
+                name: "IX_Meetups_CreatedByuserId",
                 table: "Meetups",
-                column: "CreatedById");
+                column: "CreatedByuserId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Users_BudgetcostCategoryId",
+                name: "IX_Users_roleId",
                 table: "Users",
-                column: "BudgetcostCategoryId");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_Users_RoleId",
-                table: "Users",
-                column: "RoleId");
+                column: "roleId");
         }
 
         protected override void Down(MigrationBuilder migrationBuilder)
@@ -225,19 +211,19 @@ namespace MeetupAPI.Migrations
                 name: "Locations");
 
             migrationBuilder.DropTable(
+                name: "CostCategories");
+
+            migrationBuilder.DropTable(
                 name: "Meetups");
+
+            migrationBuilder.DropTable(
+                name: "Budgets");
 
             migrationBuilder.DropTable(
                 name: "Users");
 
             migrationBuilder.DropTable(
-                name: "CostCategories");
-
-            migrationBuilder.DropTable(
                 name: "Roles");
-
-            migrationBuilder.DropTable(
-                name: "Budgets");
         }
     }
 }

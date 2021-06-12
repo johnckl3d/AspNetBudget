@@ -31,15 +31,15 @@ namespace MeetupAPI.Controllers
         {
             var user = _meetupContext.Users
                 .Include(user => user.Role)
-                .FirstOrDefault(user => user.Email == userLoginDto.Email);
+                .FirstOrDefault(user => user.userId == userLoginDto.Userid);
 
             if (user == null)
             {
                 return BadRequest("Invalid username or password");
             }
 
-            var passwordVeificationResult =_passwordHasher.VerifyHashedPassword(user, user.PasswordHash, userLoginDto.Password);
-            if (passwordVeificationResult == PasswordVerificationResult.Failed)
+            var passwordVerificationResult = _passwordHasher.VerifyHashedPassword(user, user.passwordHash, userLoginDto.Password);
+            if (passwordVerificationResult == PasswordVerificationResult.Failed)
             {
                 return BadRequest("Invalid username or password");
             }
@@ -47,6 +47,7 @@ namespace MeetupAPI.Controllers
             var token = _jwtProvider.GenerateJwtToken(user);
 
             return Ok(token);
+            //return Ok();
         }
 
         [HttpPost("register")]
@@ -59,14 +60,15 @@ namespace MeetupAPI.Controllers
 
             var newUser = new User()
             {
-                Email = registerUserDto.Email,
-                Nationality = registerUserDto.Nationality,
-                DateOfBirth = registerUserDto.DateOfBirth,
-                RoleId = registerUserDto.RoleId
+                userId = registerUserDto.userId,
+                firstName = registerUserDto.firstName,
+                lastName = registerUserDto.lastName,
+                email = registerUserDto.email,
+                roleId = registerUserDto.roleId
             };
 
-            var passwordHash = _passwordHasher.HashPassword(newUser, registerUserDto.Password);
-            newUser.PasswordHash = passwordHash;
+            var passwordHash = _passwordHasher.HashPassword(newUser, registerUserDto.password);
+            newUser.passwordHash = passwordHash;
 
             _meetupContext.Users.Add(newUser);
             _meetupContext.SaveChanges();

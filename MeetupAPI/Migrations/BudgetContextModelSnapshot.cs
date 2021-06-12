@@ -152,6 +152,9 @@ namespace MeetupAPI.Migrations
                     b.Property<int?>("CreatedById")
                         .HasColumnType("int");
 
+                    b.Property<string>("CreatedByuserId")
+                        .HasColumnType("nvarchar(450)");
+
                     b.Property<DateTime>("Date")
                         .HasColumnType("datetime2");
 
@@ -166,7 +169,7 @@ namespace MeetupAPI.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("CreatedById");
+                    b.HasIndex("CreatedByuserId");
 
                     b.ToTable("Meetups");
                 });
@@ -188,40 +191,27 @@ namespace MeetupAPI.Migrations
 
             modelBuilder.Entity("MeetupAPI.Entities.User", b =>
                 {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
-
-                    b.Property<string>("BudgetcostCategoryId")
+                    b.Property<string>("userId")
                         .HasColumnType("nvarchar(450)");
 
-                    b.Property<DateTime?>("DateOfBirth")
-                        .HasColumnType("datetime2");
-
-                    b.Property<string>("Email")
+                    b.Property<string>("email")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("FirstName")
+                    b.Property<string>("firstName")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("LastName")
+                    b.Property<string>("lastName")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("Nationality")
+                    b.Property<string>("passwordHash")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("PasswordHash")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<int>("RoleId")
+                    b.Property<int>("roleId")
                         .HasColumnType("int");
 
-                    b.HasKey("Id");
+                    b.HasKey("userId");
 
-                    b.HasIndex("BudgetcostCategoryId");
-
-                    b.HasIndex("RoleId");
+                    b.HasIndex("roleId");
 
                     b.ToTable("Users");
                 });
@@ -264,18 +254,14 @@ namespace MeetupAPI.Migrations
                 {
                     b.HasOne("MeetupAPI.Entities.User", "CreatedBy")
                         .WithMany()
-                        .HasForeignKey("CreatedById");
+                        .HasForeignKey("CreatedByuserId");
                 });
 
             modelBuilder.Entity("MeetupAPI.Entities.User", b =>
                 {
-                    b.HasOne("MeetupAPI.Entities.CostCategory", "Budget")
-                        .WithMany()
-                        .HasForeignKey("BudgetcostCategoryId");
-
                     b.HasOne("MeetupAPI.Entities.Role", "Role")
                         .WithMany()
-                        .HasForeignKey("RoleId")
+                        .HasForeignKey("roleId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
                 });

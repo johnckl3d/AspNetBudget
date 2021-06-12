@@ -9,13 +9,13 @@ namespace MeetupAPI.Models
 {
     public class RegisterUserDto
     {
-        public string Email { get; set; }
+        public string userId { get; set; }
+        public string email { get; set; }
+        public string firstName { get; set; }
+        public string lastName { get; set; }
+        public string password { get; set; }
 
-        public string Password { get; set; }
-
-        public string ConfirmPassword { get; set; }
-        public string Nationality { get; set; }
-        public DateTime? DateOfBirth { get; set; }
-        public int RoleId { get; set; } = 1;
+        public string confirmPassword { get; set; }
+        public int roleId { get; set; } = 1;
     }
 }

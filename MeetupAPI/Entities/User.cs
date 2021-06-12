@@ -1,23 +1,22 @@
-﻿using System;
+﻿
+using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
-
+using System.ComponentModel.DataAnnotations;
+using MeetupAPI.Models;
+using System.ComponentModel.DataAnnotations.Schema;
 namespace MeetupAPI.Entities
 {
     public class User
     {
-        public int Id { get; set; }
-        public string Email { get; set; }
-        public string FirstName { get; set; }
-        public string LastName { get; set; }
-        public string Nationality { get; set; }
-        public DateTime? DateOfBirth { get; set; }
-        public string PasswordHash { get; set; }
-        public int RoleId { get; set; }
+        [Key]
+        public string userId { get; set; }
+        public string email { get; set; }
+        public string firstName { get; set; }
+        public string lastName { get; set; }
+        public string passwordHash { get; set; }
+        public int roleId { get; set; }
         public Role Role  { get; set; }
-
-        public CostCategory Budget { get; set; }
     }
 }

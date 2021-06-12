@@ -14,13 +14,19 @@ namespace MeetupAPI.Validators
     {
         public RegisterUserValidator(BudgetContext meetupContext)
         {
-            RuleFor(x => x.Email).NotEmpty();
-            RuleFor(x => x.Password).MinimumLength(6);
-            RuleFor(x => x.Password).Equal(x => x.ConfirmPassword);
-            RuleFor(x => x.Email).Custom((value, context) =>
+            RuleFor(x => x.email).NotEmpty();
+            RuleFor(x => x.password).MinimumLength(6);
+            RuleFor(x => x.password).Equal(x => x.confirmPassword);
+            RuleFor(x => x.email).Custom((value, context) =>
             {
-                var userAlreadyExists = meetupContext.Users.Any(user => user.Email == value);
+                var userAlreadyExists = meetupContext.Users.Any(user => user.userId == value);
                 if (userAlreadyExists)
+                {
+                    context.AddFailure("Userid", "That user id is taken");
+                }
+
+                var emailAlreadyExists = meetupContext.Users.Any(user => user.email == value);
+                if (emailAlreadyExists)
                 {
                     context.AddFailure("Email", "That email address is taken");
                 }

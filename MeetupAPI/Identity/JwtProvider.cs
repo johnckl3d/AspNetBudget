@@ -22,18 +22,10 @@ namespace MeetupAPI.Identity
         {
             var claims = new List<Claim>()
             {
-                new Claim(ClaimTypes.NameIdentifier, user.Id.ToString()),
+                new Claim(ClaimTypes.NameIdentifier, user.userId),
                 new Claim(ClaimTypes.Role, user.Role.RoleName),
-                new Claim(ClaimTypes.Name, user.Email),
-                new Claim("DateOfBirth", user.DateOfBirth.Value.ToString("dd-MM-yyyy")),
+                new Claim(ClaimTypes.Name, user.userId),
             };
-
-            if (!string.IsNullOrEmpty(user.Nationality))
-            {
-                claims.Add(
-                    new Claim("Nationality", user.Nationality)
-                );
-            }
 
             var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_jwtOptions.JwtKey));
             var creds = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);

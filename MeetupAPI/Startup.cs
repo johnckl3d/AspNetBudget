@@ -112,6 +112,7 @@ namespace MeetupAPI
                 app.UseHsts();
             }
             app.UseAuthentication();
+            app.UseHttpsRedirection();
             app.UseRouting();
             app.UseAuthorization();
             app.UseEndpoints(endpoints =>

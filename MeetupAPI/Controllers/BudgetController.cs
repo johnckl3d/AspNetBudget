@@ -31,7 +31,6 @@ namespace MeetupAPI.Controllers
         }
 
         [HttpGet]
-        [AllowAnonymous]
         public ActionResult<List<BudgetDto>> Get()
         {
             var budget = _budgetContext.Budgets
