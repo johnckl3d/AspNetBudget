@@ -121,32 +121,32 @@ namespace MeetupAPI.Controllers
             return Created($"api/budget/{id}", null);
         }
 
-        //[HttpPut("{budgetId}")]
-        //public ActionResult Put(string budgetId, [FromBody] BudgetDto model)
-        //{
-        //    if (!ModelState.IsValid)
-        //    {
-        //        return BadRequest(ModelState);
-        //    }
+        [HttpPut("{budgetId}")]
+        public ActionResult Put(string budgetId, [FromBody] BudgetDto model)
+        {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
 
-        //    var budget = _budgetContext.Budgets.FirstOrDefault(b => b.budgetId.Replace(" ", "-").ToLower() == budgetId);
+            var budget = _budgetContext.Budgets.FirstOrDefault(b => b.budgetId.Replace(" ", "-").ToLower() == budgetId);
 
-        //    if(budget == null)
-        //    {
-        //        return NotFound();
-        //    }
+            if (budget == null)
+            {
+                return NotFound();
+            }
 
-        //    var authorizationResult = _authorizationService.AuthorizeAsync(User, budget, new ResourceOperationRequirement(OperationType.Update)).Result;
+            var authorizationResult = _authorizationService.AuthorizeAsync(User, budget, new ResourceOperationRequirement(OperationType.Update)).Result;
 
-        //    if (!authorizationResult.Succeeded)
-        //    {
-        //        return Forbid();
-        //    }
+            if (!authorizationResult.Succeeded)
+            {
+                return Forbid();
+            }
 
-        //    _budgetContext.SaveChanges();
+            _budgetContext.SaveChanges();
 
-        //    return Created($"api/budget/{budgetId}", null);
-        //}
+            return Created($"api/budget/{budgetId}", null);
+        }
 
 
         [HttpDelete("{budgetId}")]
