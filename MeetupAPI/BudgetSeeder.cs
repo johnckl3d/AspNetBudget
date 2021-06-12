@@ -119,8 +119,8 @@ namespace MeetupAPI
                 }
             };
 
-            _budgetContext.AddRange(role);
-            _budgetContext.AddRange(user1);
+            //_budgetContext.AddRange(role);
+            //_budgetContext.AddRange(user1);
             _budgetContext.AddRange(budgets);
             _budgetContext.SaveChanges();
         }

@@ -63,8 +63,7 @@ namespace MeetupAPI
             });
 
             services.AddScoped<TimeTrackFilter>();
-            services.AddScoped<IAuthorizationHandler, MeetupResourceOperationHandler>();
-            services.AddScoped<IAuthorizationHandler, MinimumAgeHandler>();
+            services.AddScoped<IAuthorizationHandler, BudgetResourceOperationHandler>();
             services.AddScoped<IJwtProvider, JwtProvider>();
             services.AddScoped<IPasswordHasher<User>, PasswordHasher<User>>();
             services.AddControllers(options => options.Filters.Add(typeof(ExceptionFilter))).AddFluentValidation().AddNewtonsoftJson(

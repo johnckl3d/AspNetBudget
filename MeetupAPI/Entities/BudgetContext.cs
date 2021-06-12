@@ -27,27 +27,21 @@ namespace MeetupAPI.Entities
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-            modelBuilder.Entity<Meetup>()
-                .HasOne(c => c.CreatedBy);
+            modelBuilder.Entity<Budget>()
+                .HasOne(c => c.User);
 
             modelBuilder.Entity<User>()
                 .HasOne(u => u.Role);
 
-            modelBuilder.Entity<Meetup>()
-                .HasOne(m => m.Location)
-                .WithOne(l => l.Meetup)
-                .HasForeignKey<Location>(l => l.MeetupId);
 
-            modelBuilder.Entity<Meetup>()
-                .HasMany(m => m.Lectures)
-                .WithOne(l => l.Meetup);
 
-            /*
-            modelBuilder.Entity<User>()
-             .HasOne(u => u.Budget)
-             .WithOne(b => b.User)
-            .HasForeignKey<Budget>(b => b.UserId);
-            */
+
+            //modelBuilder.Entity<Budget>()
+            //.HasMany<Budget>(b => b.createdBy)
+            //  .WithOne(b => b.budget)
+            //    .HasForeignKey(c => c.budgetId)
+            //  .OnDelete(DeleteBehavior.Cascade);
+
             modelBuilder.Entity<Budget>()
               .HasMany<CostCategory>(c => c.costCategories)
               .WithOne(b => b.budget)

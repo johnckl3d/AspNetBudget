@@ -108,15 +108,45 @@ namespace MeetupAPI.Controllers
 
             var budget = _mapper.Map<Budget>(model);
             var id = Guid.NewGuid().ToString();
+            var userid = User.FindFirst(c => c.Type == ClaimTypes.NameIdentifier).Value;
+            budget.createdBy = userid;
+
             budget.budgetId = id;
 
-            
+
             _budgetContext.Add(budget);
 
             _budgetContext.SaveChanges();
 
             return Created($"api/budget/{id}", null);
         }
+
+        //[HttpPut("{budgetId}")]
+        //public ActionResult Put(string budgetId, [FromBody] BudgetDto model)
+        //{
+        //    if (!ModelState.IsValid)
+        //    {
+        //        return BadRequest(ModelState);
+        //    }
+
+        //    var budget = _budgetContext.Budgets.FirstOrDefault(b => b.budgetId.Replace(" ", "-").ToLower() == budgetId);
+
+        //    if(budget == null)
+        //    {
+        //        return NotFound();
+        //    }
+
+        //    var authorizationResult = _authorizationService.AuthorizeAsync(User, budget, new ResourceOperationRequirement(OperationType.Update)).Result;
+
+        //    if (!authorizationResult.Succeeded)
+        //    {
+        //        return Forbid();
+        //    }
+
+        //    _budgetContext.SaveChanges();
+
+        //    return Created($"api/budget/{budgetId}", null);
+        //}
 
 
         [HttpDelete("{budgetId}")]
@@ -138,22 +168,5 @@ namespace MeetupAPI.Controllers
             return NoContent();
         }
 
-        //[HttpDelete("{costCategoryId}")]
-        //[AllowAnonymous]
-        //public ActionResult Delete(string costCategoryId)
-        //{
-
-        //    var costCategory = _budgetContext.CostCategories.FirstOrDefault(c => c.costCategoryId.Replace(" ", "-") == costCategoryId.ToLower());
-        //    if (costCategory == null)
-        //    {
-        //        return NotFound();
-        //    }
-        //    _budgetContext.Remove(costCategory);
-
-
-        //    _budgetContext.SaveChanges();
-
-        //    return NoContent();
-        //}
     }
 }

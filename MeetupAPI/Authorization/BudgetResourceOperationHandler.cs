@@ -9,10 +9,10 @@ using Microsoft.AspNetCore.Authorization;
 
 namespace MeetupAPI.Authorization
 {
-    public class MeetupResourceOperationHandler : AuthorizationHandler<ResourceOperationRequirement, Meetup>
+    public class BudgetResourceOperationHandler : AuthorizationHandler<ResourceOperationRequirement, Budget>
     {
         protected override Task HandleRequirementAsync(AuthorizationHandlerContext context, ResourceOperationRequirement requirement,
-            Meetup resource)
+            Budget resource)
         {
             if (requirement.OperationType == OperationType.Create || requirement.OperationType == OperationType.Read)
             {
@@ -21,7 +21,7 @@ namespace MeetupAPI.Authorization
 
             var userId = context.User.FindFirst(c => c.Type == ClaimTypes.NameIdentifier).Value;
 
-            if (resource.CreatedById == int.Parse(userId))
+            if (resource.createdBy == userId)
             {
                 context.Succeed(requirement);
             }

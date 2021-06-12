@@ -34,9 +34,9 @@ namespace MeetupAPI.Controllers
         public ActionResult<List<CostCategoryDto>> Get()
         {
            
-            var budgets = _budgetContext.CostCategories.Include(b => b.costItems).ToList();
-            var budgetDtos = _mapper.Map<List<CostCategoryDto>>(budgets);
-            return Ok(budgetDtos);
+            var costCategory = _budgetContext.CostCategories.Include(b => b.costItems).ToList();
+            var costCategoryDtos = _mapper.Map<List<CostCategoryDto>>(costCategory);
+            return Ok(costCategoryDtos);
         }
 
         [HttpPost]

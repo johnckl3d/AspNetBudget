@@ -10,7 +10,6 @@ namespace MeetupAPI.Entities
 {
     public class Budget
     {
-        [Key]
         public string budgetId { get; set; }
         public string name { get; set; }
         public string description { get; set; }
@@ -23,6 +22,10 @@ namespace MeetupAPI.Entities
 
 
         public virtual List<CostCategory> costCategories { get; set; }
+
+        public string createdBy { get; set; }
+
+        public virtual User User { get; set; }
 
     }
 }
