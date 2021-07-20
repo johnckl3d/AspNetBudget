@@ -21,6 +21,7 @@ using Microsoft.Extensions.Hosting;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using Newtonsoft.Json;
+using MeetupAPI.Helpers;
 
 namespace MeetupAPI
 {
@@ -38,7 +39,7 @@ namespace MeetupAPI
         {
             var jwtOptions = new JwtOptions();
             Configuration.GetSection("jwt").Bind(jwtOptions);
-
+            services.Configure<AppSettings>(Configuration.GetSection("AppSettings"));
             services.AddSingleton(jwtOptions);
 
             services.AddAuthentication(options =>

@@ -98,7 +98,6 @@ namespace MeetupAPI.Controllers
 
 
         [HttpPost]
-        [AllowAnonymous]
         public ActionResult Post([FromBody] BudgetDto model)
         {
             if (!ModelState.IsValid)
@@ -118,7 +117,34 @@ namespace MeetupAPI.Controllers
 
             _budgetContext.SaveChanges();
 
-            return Created($"api/budget/{id}", null);
+            var budgetList = _budgetContext.Budgets
+             .Include(c => c.costCategories)
+            .ThenInclude(i => i.costItems).ToList();
+
+            List<BudgetDto> budgetDtoList =
+   _mapper.Map<List<Budget>, List<BudgetDto>>(budgetList);
+            List<BudgetResponseDto> result = new List<BudgetResponseDto>();
+            foreach (BudgetDto item in budgetDtoList)
+            {
+
+                BudgetResponseDto responseDto = new BudgetResponseDto(item.budgetId, item.name, item.description, item.totalBudgetAmount, item.totalCostAmount, new List<CostSnapShotDto>(), new List<CostCategoryDto>());
+                foreach (var c in item.costCategories)
+                {
+                    responseDto.AddCostCategory(c);
+                    if (c.costItems != null)
+                    {
+                        foreach (var i in c.costItems)
+                        {
+                            CostSnapShotDto s = new CostSnapShotDto(i.dateTime, i.amount);
+                            responseDto.AddCostSnapShot(s);
+                        }
+                        responseDto.ReorderSnapshotsByDateTime();
+                    }
+                }
+                result.Add(responseDto);
+            }
+            //return Ok();
+            return Ok(result);
         }
 
         [HttpPut("{budgetId}")]
@@ -150,7 +176,6 @@ namespace MeetupAPI.Controllers
 
 
         [HttpDelete("{budgetId}")]
-        [AllowAnonymous]
         public ActionResult Delete(string budgetId)
         {
             Console.WriteLine("Delete");
@@ -165,7 +190,35 @@ namespace MeetupAPI.Controllers
 
             _budgetContext.SaveChanges();
 
-            return NoContent();
+
+            var budgetList = _budgetContext.Budgets
+             .Include(c => c.costCategories)
+            .ThenInclude(i => i.costItems).ToList();
+
+            List<BudgetDto> budgetDtoList =
+   _mapper.Map<List<Budget>, List<BudgetDto>>(budgetList);
+            List<BudgetResponseDto> result = new List<BudgetResponseDto>();
+            foreach (BudgetDto item in budgetDtoList)
+            {
+
+                BudgetResponseDto responseDto = new BudgetResponseDto(item.budgetId, item.name, item.description, item.totalBudgetAmount, item.totalCostAmount, new List<CostSnapShotDto>(), new List<CostCategoryDto>());
+                foreach (var c in item.costCategories)
+                {
+                    responseDto.AddCostCategory(c);
+                    if (c.costItems != null)
+                    {
+                        foreach (var i in c.costItems)
+                        {
+                            CostSnapShotDto s = new CostSnapShotDto(i.dateTime, i.amount);
+                            responseDto.AddCostSnapShot(s);
+                        }
+                        responseDto.ReorderSnapshotsByDateTime();
+                    }
+                }
+                result.Add(responseDto);
+            }
+            //return Ok();
+            return Ok(result);
         }
 
     }

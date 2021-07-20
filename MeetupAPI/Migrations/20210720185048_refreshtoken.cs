@@ -3,7 +3,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace MeetupAPI.Migrations
 {
-    public partial class Initial : Migration
+    public partial class refreshtoken : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -125,6 +125,33 @@ namespace MeetupAPI.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "RefreshToken",
+                columns: table => new
+                {
+                    Id = table.Column<int>(nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    Token = table.Column<string>(nullable: true),
+                    Expires = table.Column<DateTime>(nullable: false),
+                    Created = table.Column<DateTime>(nullable: false),
+                    CreatedByIp = table.Column<string>(nullable: true),
+                    Revoked = table.Column<DateTime>(nullable: true),
+                    RevokedByIp = table.Column<string>(nullable: true),
+                    ReplacedByToken = table.Column<string>(nullable: true),
+                    ReasonRevoked = table.Column<string>(nullable: true),
+                    userId = table.Column<string>(nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_RefreshToken", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_RefreshToken_Users_userId",
+                        column: x => x.userId,
+                        principalTable: "Users",
+                        principalColumn: "userId",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "Lectures",
                 columns: table => new
                 {
@@ -195,6 +222,11 @@ namespace MeetupAPI.Migrations
                 column: "CreatedByuserId");
 
             migrationBuilder.CreateIndex(
+                name: "IX_RefreshToken_userId",
+                table: "RefreshToken",
+                column: "userId");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_Users_roleId",
                 table: "Users",
                 column: "roleId");
@@ -210,6 +242,9 @@ namespace MeetupAPI.Migrations
 
             migrationBuilder.DropTable(
                 name: "Locations");
+
+            migrationBuilder.DropTable(
+                name: "RefreshToken");
 
             migrationBuilder.DropTable(
                 name: "CostCategories");

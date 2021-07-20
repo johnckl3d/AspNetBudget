@@ -30,8 +30,10 @@ namespace MeetupAPI
         private void InsertSampleData()
         {
             var user1 = new User { userId = "admin", email = "johnckl3d@gmail.com", firstName = "John", lastName = "Cheang", passwordHash = "AQAAAAEAACcQAAAAEBu2+IljPGmOKLRAKnEToNisJN1ZZt6dqxknhBg0fS+/MDifbDff7UkCXKSW06vcZg==", roleId = 1 };
-
-            var role = new Role { Id = 1, RoleName = "User"};
+            var roles = new List<Role> {
+            new Role { RoleName = "User"},
+            new Role { RoleName = "Admin"}
+        };
             var costItems1 = new List<CostItem>
                     {
                           new CostItem
@@ -119,8 +121,7 @@ namespace MeetupAPI
                 }
             };
 
-            //_budgetContext.AddRange(role);
-            //_budgetContext.AddRange(user1);
+            _budgetContext.AddRange(roles);
             _budgetContext.AddRange(budgets);
             _budgetContext.SaveChanges();
         }

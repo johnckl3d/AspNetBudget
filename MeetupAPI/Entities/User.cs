@@ -6,6 +6,9 @@ using System.Threading.Tasks;
 using System.ComponentModel.DataAnnotations;
 using MeetupAPI.Models;
 using System.ComponentModel.DataAnnotations.Schema;
+using System.Text.Json.Serialization;
+using WebApi.Entities;
+
 namespace MeetupAPI.Entities
 {
     public class User
@@ -18,5 +21,8 @@ namespace MeetupAPI.Entities
         public string passwordHash { get; set; }
         public int roleId { get; set; }
         public Role Role  { get; set; }
+
+        [JsonIgnore]
+        public List<RefreshToken> RefreshTokens { get; set; }
     }
 }

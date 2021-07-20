@@ -7,13 +7,12 @@ using System.Threading.Tasks;
 
 namespace MeetupAPI.Models
 {
-    public class UserLoginDto
+    public class RefreshTokenRequest
     {
         [Required]
-        public string Userid { get; set; }
+        public string refreshToken { get; set; }
 
         [Required]
-        public string Password { get; set; }
         public string IPAddress { get; set; }
     }
 }
