@@ -18,13 +18,13 @@ namespace MeetupAPI
 
         public void Seed()
         {
-            if (_budgetContext.Database.CanConnect())
-            {
-                if (!_budgetContext.Budgets.Any())
-                {
-                    InsertSampleData();
-                }
-            }
+            //if (_budgetContext.Database.CanConnect())
+            //{
+            //    if (!_budgetContext.Budgets.Any())
+            //    {
+            //        InsertSampleData();
+            //    }
+            //}
         }
 
         private void InsertSampleData()

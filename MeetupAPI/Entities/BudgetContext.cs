@@ -34,7 +34,7 @@ namespace MeetupAPI.Entities
                 .HasOne(u => u.Role);
 
 
-
+            Console.WriteLine("here");
 
             //modelBuilder.Entity<Budget>()
             //.HasMany<Budget>(b => b.createdBy)
