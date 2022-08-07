@@ -23,6 +23,7 @@ using Microsoft.OpenApi.Models;
 using Newtonsoft.Json;
 using MeetupAPI.Helpers;
 using Microsoft.Extensions.Logging;
+using System.Linq;
 
 namespace MeetupAPI
 {

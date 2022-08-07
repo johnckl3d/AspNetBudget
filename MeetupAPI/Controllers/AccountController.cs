@@ -37,33 +37,40 @@ namespace MeetupAPI.Controllers
         [HttpPost("login")]
         public ActionResult Login([FromBody]UserLoginDto userLoginDto)
         {
-            _logger.LogWarning($"An example of a Warning trace..{userLoginDto.Userid}");
-            _logger.LogError($"An example of an Error level message{userLoginDto.Userid}");
-            _logger.LogDebug($"userLoginDto{userLoginDto.Userid}");
+            try {
 
-            var user = _meetupContext.Users
-                .Include(user => user.Role)
-                .FirstOrDefault(user => user.userId == userLoginDto.Userid);
-            if (user == null)
+
+                var user = _meetupContext.Users
+                    .Include(user => user.Role)
+                    .FirstOrDefault(user => user.userId == userLoginDto.Userid);
+                if (user == null)
+                {
+                    return BadRequest("Invalid username or password");
+                }
+
+                var passwordVerificationResult = _passwordHasher.VerifyHashedPassword(user, user.passwordHash, userLoginDto.Password);
+                if (passwordVerificationResult == PasswordVerificationResult.Failed)
+                {
+                    return BadRequest("Invalid username or password");
+                }
+
+                var token = _jwtProvider.GenerateJwtToken(user);
+                var refreshToken = _jwtProvider.GenerateJwtRefreshToken(userLoginDto.IPAddress);
+                user.RefreshTokens.Add(refreshToken);
+                RemoveOldRefreshTokens(user);
+                _meetupContext.Update(user);
+                _meetupContext.SaveChanges();
+
+                var response = new LoginResponseDto(token, refreshToken.Token);
+                return Ok(response);
+            } catch (Exception ex)
             {
-                return BadRequest("Invalid username or password");
+
+                //_logger.LogWarning($"Warning:{userLoginDto.Userid}");
+                _logger.LogError($"Error:{userLoginDto.Userid}");
+                //_logger.LogDebug($"userLoginDto{userLoginDto.Userid}");
+                return BadRequest(ex);
             }
-
-            var passwordVerificationResult = _passwordHasher.VerifyHashedPassword(user, user.passwordHash, userLoginDto.Password);
-            if (passwordVerificationResult == PasswordVerificationResult.Failed)
-            {
-                return BadRequest("Invalid username or password");
-            }
-
-            var token = _jwtProvider.GenerateJwtToken(user);
-            var refreshToken = _jwtProvider.GenerateJwtRefreshToken(userLoginDto.IPAddress);
-            user.RefreshTokens.Add(refreshToken);
-            RemoveOldRefreshTokens(user);
-            _meetupContext.Update(user);
-            _meetupContext.SaveChanges();
-
-            var response = new LoginResponseDto(token, refreshToken.Token);
-            return Ok(response);
         }
 
         [HttpPost("RemoveOldRefreshTokens")]
