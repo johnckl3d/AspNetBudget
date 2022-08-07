@@ -38,8 +38,6 @@ namespace MeetupAPI.Controllers
         public ActionResult Login([FromBody]UserLoginDto userLoginDto)
         {
             try {
-
-
                 var user = _meetupContext.Users
                     .Include(user => user.Role)
                     .FirstOrDefault(user => user.userId == userLoginDto.Userid);
@@ -67,13 +65,13 @@ namespace MeetupAPI.Controllers
             {
 
                 //_logger.LogWarning($"Warning:{userLoginDto.Userid}");
-                _logger.LogError($"Error:{userLoginDto.Userid}");
+                _logger.LogError($"Error:{ex}");
                 //_logger.LogDebug($"userLoginDto{userLoginDto.Userid}");
                 return BadRequest(ex);
             }
         }
 
-        [HttpPost("RemoveOldRefreshTokens")]
+
         private void RemoveOldRefreshTokens(User user)
         {
             // remove old inactive refresh tokens from user based on TTL in app settings
@@ -111,22 +109,30 @@ namespace MeetupAPI.Controllers
             return Ok(response);
         }
 
-        [HttpPost("RevokeToken")]
-        public void RevokeToken(string token, string ipAddress)
+        [HttpPost("revokeToken")]
+        public ActionResult RevokeToken(string token, string ipAddress)
         {
-            var user = getUserByRefreshToken(token);
-            var refreshToken = user.RefreshTokens.Single(x => x.Token == token);
+            try
+            {
+                var user = getUserByRefreshToken(token);
+                var refreshToken = user.RefreshTokens.Single(x => x.Token == token);
 
-            if (!refreshToken.IsActive)
-                throw new AppException("Invalid token");
+                if (!refreshToken.IsActive)
+                    throw new AppException("Invalid token");
 
-            // revoke token and save
-            revokeRefreshToken(refreshToken, ipAddress, "Revoked without replacement");
-            _meetupContext.Update(user);
-            _meetupContext.SaveChanges();
+                // revoke token and save
+                revokeRefreshToken(refreshToken, ipAddress, "Revoked without replacement");
+                _meetupContext.Update(user);
+                _meetupContext.SaveChanges();
+                return Ok();
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError($"Error:{ex}");
+                return BadRequest(ex);
+            }
         }
 
-        [HttpGet("{token}")]
         private User getUserByRefreshToken(string token)
         {
             var user = _meetupContext.Users.SingleOrDefault(u => u.RefreshTokens.Any(t => t.Token == token));
@@ -137,7 +143,6 @@ namespace MeetupAPI.Controllers
             return user;
         }
 
-        [HttpPost("rotateRefreshToken")]
         private RefreshToken rotateRefreshToken(RefreshToken refreshToken, string ipAddress)
         {
             var newRefreshToken = _jwtProvider.GenerateJwtRefreshToken(ipAddress);
@@ -145,7 +150,6 @@ namespace MeetupAPI.Controllers
             return newRefreshToken;
         }
 
-        [HttpPost("removeOldRefreshTokens")]
         private void removeOldRefreshTokens(User user)
         {
             // remove old inactive refresh tokens from user based on TTL in app settings
@@ -154,7 +158,6 @@ namespace MeetupAPI.Controllers
                 x.Created.AddDays(_appSettings.RefreshTokenTTL) <= DateTime.UtcNow);
         }
 
-        [HttpPost("revokeDescendantRefreshTokens")]
         private void revokeDescendantRefreshTokens(RefreshToken refreshToken, User user, string ipAddress, string reason)
         {
             // recursively traverse the refresh token chain and ensure all descendants are revoked
@@ -168,7 +171,6 @@ namespace MeetupAPI.Controllers
             }
         }
 
-        [HttpPost("revokeRefreshToken")]
         private void revokeRefreshToken(RefreshToken token, string ipAddress, string reason = null, string replacedByToken = null)
         {
             token.Revoked = DateTime.UtcNow;
@@ -177,14 +179,14 @@ namespace MeetupAPI.Controllers
             token.ReplacedByToken = replacedByToken;
         }
 
-        [HttpGet]
-        public IEnumerable<User> GetAll()
+
+        private IEnumerable<User> GetAll()
         {
             return _meetupContext.Users;
         }
 
-        [HttpGet("{id}")]
-        public User GetById(int id)
+
+        private User GetById(int id)
         {
             var user = _meetupContext.Users.Find(id);
             if (user == null) throw new KeyNotFoundException("User not found");
@@ -215,6 +217,34 @@ namespace MeetupAPI.Controllers
             _meetupContext.SaveChanges();
 
             return Ok();
+        }
+
+        [HttpPost("deleteAccount")]
+        public ActionResult DeleteAccount([FromBody] RefreshTokenRequest request)
+        {
+            try
+            {
+                var user = _meetupContext.Users.SingleOrDefault(u => u.RefreshTokens.Any(t => t.Token == request.refreshToken));
+
+                // return null if no user found with token
+                if (user == null) return null;
+
+                var refreshToken = user.RefreshTokens.Single(x => x.Token == request.refreshToken);
+
+                // return null if token is no longer active
+                if (!refreshToken.IsActive) return null;
+
+                refreshToken.Revoked = DateTime.UtcNow;
+                refreshToken.RevokedByIp = request.IPAddress;
+                revokeRefreshToken(refreshToken, request.IPAddress, "Revoked without replacement");
+                _meetupContext.Remove(user);
+                _meetupContext.SaveChanges();
+                return Ok();
+            } catch (Exception ex)
+            {
+                _logger.LogError($"Error:{ex}");
+                return BadRequest(ex);
+            }
         }
     }
 }

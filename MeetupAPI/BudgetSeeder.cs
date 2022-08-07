@@ -29,7 +29,7 @@ namespace MeetupAPI
 
         private void InsertSampleData()
         {
-            var user1 = new User { userId = "admin", email = "johnckl3d@gmail.com", firstName = "John", lastName = "Cheang", passwordHash = "AQAAAAEAACcQAAAAEBu2+IljPGmOKLRAKnEToNisJN1ZZt6dqxknhBg0fS+/MDifbDff7UkCXKSW06vcZg==", roleId = 1 };
+            var user1 = new User { userId = "admin", email = "johnckl3d@gmail.com", firstName = "John", lastName = "Cheang", passwordHash = "AQAAAAEAACcQAAAAENlwHwa09T1qzHHuRVitZz9cGpXISb1osNxsSC3EUXwI4dYLTqxlHGtCGzeSeLHhFg==", roleId = 1 };
             var roles = new List<Role> {
             new Role { RoleName = "User"},
             new Role { RoleName = "Admin"}

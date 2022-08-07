@@ -26,7 +26,7 @@ namespace MeetupAPI.Controllers
                 ((IConfigurationRoot)_configuration).Reload();
                 return Ok();
             }
-            catch (Exception e)
+            catch
             {
                 return StatusCode(500);
             }
