@@ -22,6 +22,7 @@ using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using Newtonsoft.Json;
 using MeetupAPI.Helpers;
+using Microsoft.Extensions.Logging;
 
 namespace MeetupAPI
 {
@@ -41,6 +42,15 @@ namespace MeetupAPI
             Configuration.GetSection("jwt").Bind(jwtOptions);
             services.Configure<AppSettings>(Configuration.GetSection("AppSettings"));
             services.AddSingleton(jwtOptions);
+
+            Microsoft.ApplicationInsights.AspNetCore.Extensions.ApplicationInsightsServiceOptions aiOptions
+                = new Microsoft.ApplicationInsights.AspNetCore.Extensions.ApplicationInsightsServiceOptions();
+            // Disables adaptive sampling.
+            aiOptions.EnableAdaptiveSampling = false;
+
+            // Disables QuickPulse (Live Metrics stream).
+            aiOptions.EnableQuickPulseMetricStream = false;
+            services.AddApplicationInsightsTelemetry(aiOptions);
 
             services.AddAuthentication(options =>
             {
@@ -62,7 +72,6 @@ namespace MeetupAPI
                 options.AddPolicy("HasNationality", builder => builder.RequireClaim("Nationality", "German", "English"));
                 options.AddPolicy("AtLeast18", builder => builder.AddRequirements(new MinimumAgeRequirement(18)));
             });
-            services.AddApplicationInsightsTelemetry();
             services.AddScoped<TimeTrackFilter>();
             services.AddScoped<IAuthorizationHandler, BudgetResourceOperationHandler>();
             services.AddScoped<IJwtProvider, JwtProvider>();
@@ -90,9 +99,17 @@ namespace MeetupAPI
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-        public void Configure(IApplicationBuilder app, IWebHostEnvironment env, BudgetSeeder meetupSeeder, BudgetContext context)
+        public void Configure(IApplicationBuilder app, IWebHostEnvironment env, BudgetSeeder meetupSeeder, BudgetContext context, ILogger<Startup> logger)
         {
             RunMigrations(context);
+            logger.LogInformation(
+                "Configuring for {Environment} environment",
+                env.EnvironmentName);
+
+            if (env.IsDevelopment())
+            {
+                app.UseDeveloperExceptionPage();
+            }
             app.UseResponseCaching();
             app.UseStaticFiles();
             app.UseCors("FrontEndClient");

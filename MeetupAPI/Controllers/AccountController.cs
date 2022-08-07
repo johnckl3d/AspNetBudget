@@ -10,6 +10,7 @@ using MeetupAPI.Models;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using WebApi.Entities;
 
@@ -22,22 +23,27 @@ namespace MeetupAPI.Controllers
         private readonly IPasswordHasher<User> _passwordHasher;
         private readonly IJwtProvider _jwtProvider;
         private readonly AppSettings _appSettings;
+        private readonly ILogger _logger;
 
-        public AccountController(BudgetContext meetupContext, IPasswordHasher<User> passwordHasher, IJwtProvider jwtProvider, IOptions<AppSettings> appSettings)
+        public AccountController(BudgetContext meetupContext, IPasswordHasher<User> passwordHasher, IJwtProvider jwtProvider, IOptions<AppSettings> appSettings, ILogger<AccountController> logger)
         {
             _meetupContext = meetupContext;
             _passwordHasher = passwordHasher;
             _jwtProvider = jwtProvider;
             _appSettings = appSettings.Value;
+            _logger = logger;
         }
 
         [HttpPost("login")]
         public ActionResult Login([FromBody]UserLoginDto userLoginDto)
         {
+            _logger.LogWarning($"An example of a Warning trace..{userLoginDto.Userid}");
+            _logger.LogError($"An example of an Error level message{userLoginDto.Userid}");
+            _logger.LogDebug($"userLoginDto{userLoginDto.Userid}");
+
             var user = _meetupContext.Users
                 .Include(user => user.Role)
                 .FirstOrDefault(user => user.userId == userLoginDto.Userid);
-
             if (user == null)
             {
                 return BadRequest("Invalid username or password");
