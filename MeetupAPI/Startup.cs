@@ -27,7 +27,7 @@ using System.Linq;
 
 namespace MeetupAPI
 {
-    
+    //test
     public class Startup
     {
         public Startup(IConfiguration configuration)
