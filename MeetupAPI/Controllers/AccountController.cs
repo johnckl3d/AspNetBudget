@@ -37,6 +37,7 @@ namespace MeetupAPI.Controllers
         [HttpPost("login")]
         public ActionResult Login([FromBody]UserLoginDto userLoginDto)
         {
+            _logger.LogDebug($"Debug:Login:{userLoginDto}");
             try {
                 var user = _meetupContext.Users
                     .Include(user => user.Role)

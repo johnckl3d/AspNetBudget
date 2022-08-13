@@ -44,14 +44,14 @@ namespace MeetupAPI
             services.Configure<AppSettings>(Configuration.GetSection("AppSettings"));
             services.AddSingleton(jwtOptions);
 
-            Microsoft.ApplicationInsights.AspNetCore.Extensions.ApplicationInsightsServiceOptions aiOptions
-                = new Microsoft.ApplicationInsights.AspNetCore.Extensions.ApplicationInsightsServiceOptions();
+            //Microsoft.ApplicationInsights.AspNetCore.Extensions.ApplicationInsightsServiceOptions aiOptions
+            //    = new Microsoft.ApplicationInsights.AspNetCore.Extensions.ApplicationInsightsServiceOptions();
             // Disables adaptive sampling.
-            aiOptions.EnableAdaptiveSampling = false;
+            //aiOptions.EnableAdaptiveSampling = false;
 
             // Disables QuickPulse (Live Metrics stream).
-            aiOptions.EnableQuickPulseMetricStream = false;
-            services.AddApplicationInsightsTelemetry(aiOptions);
+            //aiOptions.EnableQuickPulseMetricStream = false;
+            //services.AddApplicationInsightsTelemetry(aiOptions);
 
             services.AddAuthentication(options =>
             {
