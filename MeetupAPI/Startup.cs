@@ -24,6 +24,7 @@ using Newtonsoft.Json;
 using MeetupAPI.Helpers;
 using Microsoft.Extensions.Logging;
 using System.Linq;
+using MeetupAPI.Middlewares;
 
 namespace MeetupAPI
 {
@@ -44,6 +45,9 @@ namespace MeetupAPI
             Configuration.GetSection("jwt").Bind(jwtOptions);
             services.Configure<AppSettings>(Configuration.GetSection("AppSettings"));
             services.AddSingleton(jwtOptions);
+
+            services.AddHttpContextAccessor();
+            services.AddScoped<RequestLoggingMiddleware>();
 
             Microsoft.ApplicationInsights.AspNetCore.Extensions.ApplicationInsightsServiceOptions aiOptions
                 = new Microsoft.ApplicationInsights.AspNetCore.Extensions.ApplicationInsightsServiceOptions();
@@ -131,6 +135,7 @@ namespace MeetupAPI
                 app.UseHsts();
             }
             app.UseAuthentication();
+            app.UseMiddleware<RequestLoggingMiddleware>();
             app.UseHttpsRedirection();
             app.UseRouting();
             app.UseAuthorization();

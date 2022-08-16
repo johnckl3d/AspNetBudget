@@ -31,5 +31,9 @@
 
   <ItemGroup>
     <None Remove="Microsoft.ApplicationInsights.AspNetCore" />
+    <None Remove="Middlewares\" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Middlewares\" />
   </ItemGroup>
 </Project>
