@@ -13,83 +13,36 @@ namespace MeetupAPI.Middlewares
 {
     public class ResponseLoggingMiddleware : IMiddleware
     {
-        private readonly IHttpContextAccessor context;
-
-        public ResponseLoggingMiddleware(IHttpContextAccessor context)
+        public async Task InvokeAsync(HttpContext context, RequestDelegate next)
         {
-            this.context = context;
-        }
+            var originalBodyStream = context.Response.Body;
 
-        public async Task InvokeAsync(HttpContext http, RequestDelegate next)
-        {
-            if (context.HttpContext is not null)
+            try
             {
-                HttpResponse response = context.HttpContext.Response;
+                // Swap out stream with one that is buffered and suports seeking
+                using var memoryStream = new MemoryStream();
+                context.Response.Body = memoryStream;
 
-                string? body = null;
+                // hand over to the next middleware and wait for the call to return
+                await next(context);
 
-                if (response.Body.CanRead)
-                {
-                    body = await GetRawJson(response, Encoding.UTF8);
-                }
+                // Read response body from memory stream
+                memoryStream.Position = 0;
+                var reader = new StreamReader(memoryStream);
+                var responseBody = await reader.ReadToEndAsync();
 
-                Dictionary<string, string> pairs = new()
-                {
-                    { "ResponseBody", body },
-                    { "Tenant", GetTenant(response) },
-                    { "Headers", Serialize(GetHeaders(response)) }
-                };
+                // Copy body back to so its available to the user agent
+                memoryStream.Position = 0;
+                await memoryStream.CopyToAsync(originalBodyStream);
 
-                Enrich(pairs);
+                // Write response body to App Insights
+                var requestTelemetry = context.Features.Get<RequestTelemetry>();
+                requestTelemetry?.Properties.Add("ResponseBody", responseBody);
             }
-
-            await next.Invoke(http);
-        }
-
-        private void Enrich(Dictionary<string, string> pairs)
-        {
-            foreach (KeyValuePair<string, string> item in pairs)
+            finally
             {
-                context.HttpContext.Features.Get<RequestTelemetry>().Properties[item.Key] = item.Value;
+                context.Response.Body = originalBodyStream;
             }
-        }
-
-        private static string GetTenant(HttpResponse response)
-        {
-            bool hasTenant = response.Headers.TryGetValue("X-Request-Instance", out StringValues values);
-
-            if (!hasTenant)
-                return null;
-
-            return values.First();
-        }
-
-        private static Dictionary<string, string> GetHeaders(HttpResponse response)
-        {
-            Dictionary<string, string> responseHeaders = new Dictionary<string, string>();
-
-            foreach (KeyValuePair<string, StringValues> header in response.Headers)
-            {
-                responseHeaders.Add(header.Key, header.Value);
-            }
-
-            return responseHeaders;
-        }
-
-        private static async Task<string> GetRawJson(HttpResponse request, Encoding encoding = null)
-        {
-            //request.EnableBuffering();
-
-            string response = await new StreamReader(request.Body).ReadToEndAsync();
-
-            request.Body.Position = 0;
-
-            return response;
-        }
-
-        private static string Serialize(object item)
-        {
-            return JsonConvert.SerializeObject(item, Formatting.Indented);
         }
     }
 }
