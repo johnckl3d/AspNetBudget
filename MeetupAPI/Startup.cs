@@ -48,6 +48,7 @@ namespace MeetupAPI
 
             services.AddHttpContextAccessor();
             services.AddScoped<RequestLoggingMiddleware>();
+            services.AddScoped<ResponseLoggingMiddleware>();
 
             Microsoft.ApplicationInsights.AspNetCore.Extensions.ApplicationInsightsServiceOptions aiOptions
                 = new Microsoft.ApplicationInsights.AspNetCore.Extensions.ApplicationInsightsServiceOptions();
@@ -136,6 +137,7 @@ namespace MeetupAPI
             }
             app.UseAuthentication();
             app.UseMiddleware<RequestLoggingMiddleware>();
+            app.UseMiddleware<ResponseLoggingMiddleware>();
             app.UseHttpsRedirection();
             app.UseRouting();
             app.UseAuthorization();
