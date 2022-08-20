@@ -21,6 +21,7 @@
     <PackageReference Include="NLog.Web.AspNetCore" Version="5.1.0" />
     <PackageReference Include="Swashbuckle.AspNetCore" Version="6.4.0" />
     <PackageReference Include="Microsoft.ApplicationInsights.AspNetCore" Version="2.21.0" />
+    <PackageReference Include="NuGet.PackageManagement" Version="6.3.0" />
   </ItemGroup>
 
   <ItemGroup>
@@ -32,8 +33,11 @@
   <ItemGroup>
     <None Remove="Microsoft.ApplicationInsights.AspNetCore" />
     <None Remove="Middlewares\" />
+    <None Remove="NuGet.PackageManagement" />
+    <None Remove="Migrations\" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Middlewares\" />
+    <Folder Include="Migrations\" />
   </ItemGroup>
 </Project>

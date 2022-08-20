@@ -23,17 +23,23 @@ namespace MeetupAPI.Controllers
         private readonly BudgetContext _budgetContext;
         private readonly IMapper _mapper;
         private readonly IAuthorizationService _authorizationService;
-        public BudgetController(BudgetContext budgetContext, IMapper mapper, IAuthorizationService authorizationService)
+        private readonly ILogger _logger;
+
+        public BudgetController(BudgetContext budgetContext, IMapper mapper, IAuthorizationService authorizationService, ILogger<AccountController> logger)
         {
             _budgetContext = budgetContext;
             _mapper = mapper;
             _authorizationService = authorizationService;
+            _logger = logger;
         }
 
         [HttpGet]
         public ActionResult<List<BudgetDto>> Get()
         {
+            var userid = User.FindFirst(c => c.Type == ClaimTypes.NameIdentifier).Value;
+            _logger.LogDebug($"Debug:Budget:{userid}");
             var budget = _budgetContext.Budgets
+                .Where(u => u.userId == userid)
                 .Include(c => c.costCategories)
                .ThenInclude(i => i.costItems).ToList();
 

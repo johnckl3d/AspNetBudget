@@ -107,7 +107,8 @@ namespace MeetupAPI
                      name = "household",
                      totalBudgetAmount = 53,
                      totalCostAmount = 21,
-                     costCategories = costCategories1
+                     costCategories = costCategories1,
+                     userId = "admin"
 
                 },
                  new Budget
@@ -116,8 +117,8 @@ namespace MeetupAPI
                      name = "travel",
                      totalBudgetAmount = 2000,
                      totalCostAmount = 20,
-                     costCategories = costCategories2
-
+                     costCategories = costCategories2,
+                     userId = "admin"
                 }
             };
             _budgetContext.AddRange(user1);
