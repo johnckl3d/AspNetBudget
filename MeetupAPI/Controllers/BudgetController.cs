@@ -37,7 +37,6 @@ namespace MeetupAPI.Controllers
         public ActionResult<List<BudgetDto>> Get()
         {
             var userid = User.FindFirst(c => c.Type == ClaimTypes.NameIdentifier).Value;
-            _logger.LogDebug($"Debug:Budget:{userid}");
             var budget = _budgetContext.Budgets
                 .Where(u => u.userId == userid)
                 .Include(c => c.costCategories)
