@@ -33,7 +33,8 @@ namespace MeetupAPI.Controllers
             _logger = logger;
         }
 
-        [HttpGet]
+        [HttpGet("retrieveList")]
+        [Produces("application/json")]
         public ActionResult<List<BudgetDto>> Get()
         {
             var userid = User.FindFirst(c => c.Type == ClaimTypes.NameIdentifier).Value;
