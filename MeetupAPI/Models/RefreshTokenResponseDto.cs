@@ -5,21 +5,18 @@ using System.Threading.Tasks;
 
 namespace MeetupAPI.Models
 {
-    public class LoginResponseDto
+    public class RefreshTokenResponseDto
     {
         public string accessToken { get; set; }
         public string refreshToken { get; set; }
-        public string userId { get; set; }
-        public string emailAdd { get; set; }
 
 
-        public LoginResponseDto(string _accessToken, string _refreshToken, string _userId, string _emailAdd)
+        public RefreshTokenResponseDto(string _accessToken, string _refreshToken)
         {
             accessToken = _accessToken;
             refreshToken = _refreshToken;
-            userId = _userId;
-            emailAdd = _emailAdd;
         }
 
     }
 }
+

@@ -60,7 +60,7 @@ namespace MeetupAPI.Controllers
                 _meetupContext.Update(user);
                 _meetupContext.SaveChanges();
 
-                var response = new LoginResponseDto(token, refreshToken.Token);
+                var response = new LoginResponseDto(token, refreshToken.Token, user.userId, user.email);
                 return Ok(response);
             } catch (Exception ex)
             {
@@ -106,23 +106,23 @@ namespace MeetupAPI.Controllers
             // generate new jwt
             var jwtToken = _jwtProvider.GenerateJwtToken(user);
 
-            var response = new LoginResponseDto(jwtToken, newRefreshToken.Token);
+            var response = new RefreshTokenResponseDto(jwtToken, newRefreshToken.Token);
             return Ok(response);
         }
 
         [HttpPost("revokeToken")]
-        public ActionResult RevokeToken(string token, string ipAddress)
+        public ActionResult RevokeToken([FromBody] UserLogoutRequestDto request)
         {
             try
             {
-                var user = getUserByRefreshToken(token);
-                var refreshToken = user.RefreshTokens.Single(x => x.Token == token);
+                var user = getUserByRefreshToken(request.RefreshToken);
+                var refreshToken = user.RefreshTokens.Single(x => x.Token == request.RefreshToken);
 
                 if (!refreshToken.IsActive)
                     throw new AppException("Invalid token");
 
                 // revoke token and save
-                revokeRefreshToken(refreshToken, ipAddress, "Revoked without replacement");
+                revokeRefreshToken(refreshToken, request.IPAddress, "Revoked without replacement");
                 _meetupContext.Update(user);
                 _meetupContext.SaveChanges();
                 return Ok();
