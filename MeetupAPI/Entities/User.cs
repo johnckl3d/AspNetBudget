@@ -23,6 +23,9 @@ namespace MeetupAPI.Entities
         public Role Role  { get; set; }
 
         [JsonIgnore]
+        public virtual List<Budget> Budgets { get; set; }
+
+        [JsonIgnore]
         public List<RefreshToken> RefreshTokens { get; set; }
     }
 }

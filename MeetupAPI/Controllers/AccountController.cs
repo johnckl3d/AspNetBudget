@@ -1,12 +1,14 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Security.Claims;
 using System.Text;
 using System.Threading.Tasks;
 using MeetupAPI.Entities;
 using MeetupAPI.Helpers;
 using MeetupAPI.Identity;
 using MeetupAPI.Models;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -220,25 +222,24 @@ namespace MeetupAPI.Controllers
             return Ok();
         }
 
-        [HttpPost("deleteAccount")]
-        public ActionResult DeleteAccount([FromBody] RefreshTokenRequest request)
+        [HttpDelete("delete")]
+        [Authorize]
+        public ActionResult DeleteAccount()
         {
             try
             {
-                var user = _meetupContext.Users.SingleOrDefault(u => u.RefreshTokens.Any(t => t.Token == request.refreshToken));
-
+                var userid = User.FindFirst(c => c.Type == ClaimTypes.NameIdentifier).Value;
+                var user = _meetupContext.Users
+            .Where(u => u.userId == userid);
                 // return null if no user found with token
-                if (user == null) return null;
 
-                var refreshToken = user.RefreshTokens.Single(x => x.Token == request.refreshToken);
+                if (user == null)
+                {
+                    return NotFound();
+                }
+                _meetupContext.RemoveRange(user);
 
-                // return null if token is no longer active
-                if (!refreshToken.IsActive) return null;
 
-                refreshToken.Revoked = DateTime.UtcNow;
-                refreshToken.RevokedByIp = request.IPAddress;
-                revokeRefreshToken(refreshToken, request.IPAddress, "Revoked without replacement");
-                _meetupContext.Remove(user);
                 _meetupContext.SaveChanges();
                 return Ok();
             } catch (Exception ex)
