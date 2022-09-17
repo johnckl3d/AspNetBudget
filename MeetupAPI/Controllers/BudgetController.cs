@@ -104,53 +104,67 @@ namespace MeetupAPI.Controllers
 
 
         [HttpPost]
-        public ActionResult Post([FromBody] BudgetDto model)
+        public ActionResult Post([FromBody] CreateBudgetRequestDto model)
         {
             if (!ModelState.IsValid)
             {
                 return BadRequest(ModelState);
             }
+            _logger.LogDebug($"Debug:Budget:Post:{model}");
+            try
+            {
+                var budget = _mapper.Map<Budget>(model);
+                var id = Guid.NewGuid().ToString();
+                var userid = User.FindFirst(c => c.Type == ClaimTypes.NameIdentifier).Value;
+                var user = _budgetContext.Users.Find(id);
+                budget.createdBy = userid;
+                budget.userId = userid;
+                budget.User = user;
+                budget.budgetId = id;
+                budget.totalBudgetAmount = 0;
+                budget.totalCostAmount = 0;
 
-            var budget = _mapper.Map<Budget>(model);
-            var id = Guid.NewGuid().ToString();
-            var userid = User.FindFirst(c => c.Type == ClaimTypes.NameIdentifier).Value;
-            budget.createdBy = userid;
+                _budgetContext.Add(budget);
 
-            budget.budgetId = id;
+                _budgetContext.SaveChanges();
 
+                //         var budgetList = _budgetContext.Budgets
+                //          .Include(c => c.costCategories)
+                //         .ThenInclude(i => i.costItems).ToList();
 
-            _budgetContext.Add(budget);
+                //         List<BudgetDto> budgetDtoList =
+                //_mapper.Map<List<Budget>, List<BudgetDto>>(budgetList);
+                //         List<BudgetResponseDto> result = new List<BudgetResponseDto>();
+                //         foreach (BudgetDto item in budgetDtoList)
+                //         {
 
-            _budgetContext.SaveChanges();
-
-            var budgetList = _budgetContext.Budgets
-             .Include(c => c.costCategories)
-            .ThenInclude(i => i.costItems).ToList();
-
-            List<BudgetDto> budgetDtoList =
-   _mapper.Map<List<Budget>, List<BudgetDto>>(budgetList);
-            List<BudgetResponseDto> result = new List<BudgetResponseDto>();
-            foreach (BudgetDto item in budgetDtoList)
+                //             BudgetResponseDto responseDto = new BudgetResponseDto(item.budgetId, item.name, item.description, item.totalBudgetAmount, item.totalCostAmount, new List<CostSnapShotDto>(), new List<CostCategoryDto>());
+                //             foreach (var c in item.costCategories)
+                //             {
+                //                 responseDto.AddCostCategory(c);
+                //                 if (c.costItems != null)
+                //                 {
+                //                     foreach (var i in c.costItems)
+                //                     {
+                //                         CostSnapShotDto s = new CostSnapShotDto(i.dateTime, i.amount);
+                //                         responseDto.AddCostSnapShot(s);
+                //                     }
+                //                     responseDto.ReorderSnapshotsByDateTime();
+                //                 }
+                //             }
+                //             result.Add(responseDto);
+                //         }
+                //return Ok();
+                return Ok(id);
+            }
+            catch (Exception ex)
             {
 
-                BudgetResponseDto responseDto = new BudgetResponseDto(item.budgetId, item.name, item.description, item.totalBudgetAmount, item.totalCostAmount, new List<CostSnapShotDto>(), new List<CostCategoryDto>());
-                foreach (var c in item.costCategories)
-                {
-                    responseDto.AddCostCategory(c);
-                    if (c.costItems != null)
-                    {
-                        foreach (var i in c.costItems)
-                        {
-                            CostSnapShotDto s = new CostSnapShotDto(i.dateTime, i.amount);
-                            responseDto.AddCostSnapShot(s);
-                        }
-                        responseDto.ReorderSnapshotsByDateTime();
-                    }
-                }
-                result.Add(responseDto);
+                //_logger.LogWarning($"Warning:{userLoginDto.Userid}");
+                _logger.LogError($"Error::Budget:Post:{ex}");
+                //_logger.LogDebug($"userLoginDto{userLoginDto.Userid}");
+                return BadRequest(ex);
             }
-            //return Ok();
-            return Ok(result);
         }
 
         [HttpPut("{budgetId}")]

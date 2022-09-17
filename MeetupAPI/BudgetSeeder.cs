@@ -42,7 +42,7 @@ namespace MeetupAPI
                            name = "electric",
                            amount = 400.50,
                             costCategoryId = "a4f10e4c-70cb-44ae-985b-32f13cf9429f",
-                            dateTime = new DateTime(2021, 01, 15),
+                            dateTime = new DateTime(2022, 09, 22),
                             description = "electric desc"
         },
                              new CostItem
@@ -51,7 +51,7 @@ namespace MeetupAPI
                            name = "water",
                            amount = 30.50,
                             costCategoryId = "a4f10e4c-70cb-44ae-985b-32f13cf9429f",
-                              dateTime = new DateTime(2021, 01, 19),
+                              dateTime = new DateTime(2022, 09, 19),
                             description = "water desc"
                         },
                      };

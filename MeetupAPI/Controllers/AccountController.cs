@@ -70,7 +70,7 @@ namespace MeetupAPI.Controllers
                 //_logger.LogWarning($"Warning:{userLoginDto.Userid}");
                 _logger.LogError($"Error:{ex}");
                 //_logger.LogDebug($"userLoginDto{userLoginDto.Userid}");
-                return BadRequest(ex);
+                return BadRequest();
             }
         }
 
@@ -245,7 +245,7 @@ namespace MeetupAPI.Controllers
             } catch (Exception ex)
             {
                 _logger.LogError($"Error:{ex}");
-                return BadRequest(ex);
+                return BadRequest();
             }
         }
     }
