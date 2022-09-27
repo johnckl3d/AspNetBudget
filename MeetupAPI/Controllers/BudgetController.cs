@@ -25,7 +25,7 @@ namespace MeetupAPI.Controllers
         private readonly IAuthorizationService _authorizationService;
         private readonly ILogger _logger;
 
-        public BudgetController(BudgetContext budgetContext, IMapper mapper, IAuthorizationService authorizationService, ILogger<AccountController> logger)
+        public BudgetController(BudgetContext budgetContext, IMapper mapper, IAuthorizationService authorizationService, ILogger<BudgetController> logger)
         {
             _budgetContext = budgetContext;
             _mapper = mapper;
