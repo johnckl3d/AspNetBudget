@@ -14,7 +14,6 @@ namespace MeetupAPI.Models
         [Required]
         [MinLength(5)]
         public string name { get; set; }
-
         [Required]
         public DateTime dateTime { get; set; }
 

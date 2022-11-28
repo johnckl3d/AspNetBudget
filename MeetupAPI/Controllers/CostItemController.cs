@@ -56,33 +56,78 @@ namespace MeetupAPI.Controllers
             {
                 return BadRequest(ModelState);
             }
-            try
+            if(model.costItemId != null)
             {
-                var costCategory = _budgetContext.CostCategories.Include(b => b.costItems).FirstOrDefault(c => c.costCategoryId.Replace(" ", "-") == costCategoryId.ToLower());
-                if (costCategory == null)
+                try
                 {
-                    return NotFound();
+                    var costCategory = _budgetContext.CostCategories.Include(b => b.costItems).FirstOrDefault(c => c.costCategoryId.Replace(" ", "-") == costCategoryId.ToLower());
+                    if (costCategory == null)
+                    {
+                        return NotFound();
+                    }
+                    var dbCostItem = _budgetContext.CostItems.FirstOrDefault(b => b.costItemId.Replace(" ", "-").ToLower() == model.costItemId);
+
+                    if (dbCostItem == null)
+                    {
+                        return NotFound();
+                    }
+                    else
+                    {
+                        dbCostItem.name = model.name;
+                        dbCostItem.amount = model.amount;
+                        dbCostItem.dateTime = model.dateTime;
+                        dbCostItem.description = model.description;
+                    }
+
+
+                    double totalAmount = 0;
+                    foreach (CostItem i in costCategory.costItems)
+                    {
+                        totalAmount += i.amount;
+                    }
+                    costCategory.totalAmount = totalAmount;
+
+                    _budgetContext.SaveChanges();
+
+                    return Created($"api/costItem/{costCategoryId}", null);
                 }
-
-                var costItem = _mapper.Map<CostItem>(model);
-                costItem.costItemId = Guid.NewGuid().ToString();
-                costCategory.costItems.Add(costItem);
-
-                double totalAmount = 0;
-                foreach (CostItem i in costCategory.costItems)
+                catch (Exception ex)
                 {
-                    totalAmount += i.amount;
+                    _logger.LogError($"Error:CostItem:Create:{ex}");
+                    return BadRequest(ex);
                 }
-                costCategory.totalAmount = totalAmount;
-
-                _budgetContext.SaveChanges();
-
-                return Created($"api/costItem/{costCategoryId}", null);
             }
-            catch (Exception ex)
+            else
             {
-                _logger.LogError($"Error:CostItem:Create:{ex}");
-                return BadRequest(ex);
+
+                try
+                {
+                    var costCategory = _budgetContext.CostCategories.Include(b => b.costItems).FirstOrDefault(c => c.costCategoryId.Replace(" ", "-") == costCategoryId.ToLower());
+                    if (costCategory == null)
+                    {
+                        return NotFound();
+                    }
+
+                    var costItem = _mapper.Map<CostItem>(model);
+                    costItem.costItemId = Guid.NewGuid().ToString();
+                    costCategory.costItems.Add(costItem);
+
+                    double totalAmount = 0;
+                    foreach (CostItem i in costCategory.costItems)
+                    {
+                        totalAmount += i.amount;
+                    }
+                    costCategory.totalAmount = totalAmount;
+
+                    _budgetContext.SaveChanges();
+
+                    return Created($"api/costItem/{costCategoryId}", null);
+                }
+                catch (Exception ex)
+                {
+                    _logger.LogError($"Error:CostItem:Create:{ex}");
+                    return BadRequest(ex);
+                }
             }
         }
 
