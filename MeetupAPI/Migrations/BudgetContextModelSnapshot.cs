@@ -78,11 +78,11 @@ namespace MeetupAPI.Migrations
                     b.Property<string>("costItemId")
                         .HasColumnType("nvarchar(450)");
 
+                    b.Property<string>("CostCategoryId")
+                        .HasColumnType("nvarchar(450)");
+
                     b.Property<double>("amount")
                         .HasColumnType("float");
-
-                    b.Property<string>("costCategoryId")
-                        .HasColumnType("nvarchar(450)");
 
                     b.Property<DateTime>("dateTime")
                         .HasColumnType("datetime2");
@@ -93,9 +93,12 @@ namespace MeetupAPI.Migrations
                     b.Property<string>("name")
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<int>("type")
+                        .HasColumnType("int");
+
                     b.HasKey("costItemId");
 
-                    b.HasIndex("costCategoryId");
+                    b.HasIndex("CostCategoryId");
 
                     b.ToTable("CostItems");
                 });
@@ -255,7 +258,7 @@ namespace MeetupAPI.Migrations
                 {
                     b.HasOne("MeetupAPI.Entities.CostCategory", "costCategory")
                         .WithMany("costItems")
-                        .HasForeignKey("costCategoryId")
+                        .HasForeignKey("CostCategoryId")
                         .OnDelete(DeleteBehavior.Cascade);
 
                     b.Navigation("costCategory");

@@ -81,7 +81,7 @@ namespace MeetupAPI.Controllers
 
 
                     double totalAmount = 0;
-                    foreach (CostItem i in costCategory.costItems)
+                    foreach (Item i in costCategory.costItems)
                     {
                         totalAmount += i.amount;
                     }
@@ -108,12 +108,12 @@ namespace MeetupAPI.Controllers
                         return NotFound();
                     }
 
-                    var costItem = _mapper.Map<CostItem>(model);
+                    var costItem = _mapper.Map<Item>(model);
                     costItem.costItemId = Guid.NewGuid().ToString();
                     costCategory.costItems.Add(costItem);
 
                     double totalAmount = 0;
-                    foreach (CostItem i in costCategory.costItems)
+                    foreach (Item i in costCategory.costItems)
                     {
                         totalAmount += i.amount;
                     }

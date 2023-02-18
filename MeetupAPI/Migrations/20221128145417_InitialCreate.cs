@@ -187,7 +187,8 @@ namespace MeetupAPI.Migrations
                 {
                     costItemId = table.Column<string>(type: "nvarchar(450)", nullable: false),
                     name = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    costCategoryId = table.Column<string>(type: "nvarchar(450)", nullable: true),
+                    type = table.Column<int>(type: "int", nullable: false),
+                    CostCategoryId = table.Column<string>(type: "nvarchar(450)", nullable: true),
                     amount = table.Column<double>(type: "float", nullable: false),
                     dateTime = table.Column<DateTime>(type: "datetime2", nullable: false),
                     description = table.Column<string>(type: "nvarchar(max)", nullable: true)
@@ -196,8 +197,8 @@ namespace MeetupAPI.Migrations
                 {
                     table.PrimaryKey("PK_CostItems", x => x.costItemId);
                     table.ForeignKey(
-                        name: "FK_CostItems_CostCategories_costCategoryId",
-                        column: x => x.costCategoryId,
+                        name: "FK_CostItems_CostCategories_CostCategoryId",
+                        column: x => x.CostCategoryId,
                         principalTable: "CostCategories",
                         principalColumn: "costCategoryId",
                         onDelete: ReferentialAction.Cascade);
@@ -214,9 +215,9 @@ namespace MeetupAPI.Migrations
                 column: "budgetId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_CostItems_costCategoryId",
+                name: "IX_CostItems_CostCategoryId",
                 table: "CostItems",
-                column: "costCategoryId");
+                column: "CostCategoryId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Lectures_MeetupId",

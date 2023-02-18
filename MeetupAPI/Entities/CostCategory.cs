@@ -23,6 +23,6 @@ namespace MeetupAPI.Entities
         [JsonIgnore]
         public virtual Budget budget { get; set; }
         public string budgetId { get; set; }
-        public virtual List<CostItem> costItems { get; set; }
+        public virtual List<Item> costItems { get; set; }
     }
 }

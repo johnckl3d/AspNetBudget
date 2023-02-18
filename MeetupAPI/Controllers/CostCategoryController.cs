@@ -62,7 +62,7 @@ namespace MeetupAPI.Controllers
             costCategory.costCategoryId = id;
 
             double totalAmount = 0;
-            foreach (CostItem i in costCategory.costItems)
+            foreach (Item i in costCategory.costItems)
             {
                 i.costItemId = Guid.NewGuid().ToString();
                 totalAmount += i.amount;

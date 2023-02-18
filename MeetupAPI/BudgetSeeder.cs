@@ -34,45 +34,49 @@ namespace MeetupAPI
             new Role { RoleName = "User"},
             new Role { RoleName = "Admin"}
         };
-            var costItems1 = new List<CostItem>
+            var costItems1 = new List<Item>
                     {
-                          new CostItem
+                          new Item
                         {
                               costItemId = "cb4bf545-176b-4453-94c5-45262a9fd8c4",
                            name = "electric",
+                           type = 0,
                            amount = 400.50,
-                            costCategoryId = "a4f10e4c-70cb-44ae-985b-32f13cf9429f",
+                            CostCategoryId = "a4f10e4c-70cb-44ae-985b-32f13cf9429f",
                             dateTime = new DateTime(2022, 09, 22),
                             description = "electric desc"
         },
-                             new CostItem
+                             new Item
                         {
                                    costItemId = "cb4bf545-176b-4453-94c5-45262a9fd8c3",
                            name = "water",
+                           type = 0,
                            amount = 30.50,
-                            costCategoryId = "a4f10e4c-70cb-44ae-985b-32f13cf9429f",
+                            CostCategoryId = "a4f10e4c-70cb-44ae-985b-32f13cf9429f",
                               dateTime = new DateTime(2022, 09, 19),
                             description = "water desc"
                         },
                      };
 
-            var costItems2 = new List<CostItem>
+            var costItems2 = new List<Item>
                     {
-                          new CostItem
+                          new Item
                         {
                               costItemId = "cb4bf545-176b-4453-94c5-45262a9fd8c5",
                            name = "pizza",
+                           type = 0,
                            amount = 400.50,
-                            costCategoryId = "a4f10e4c-70cb-44ae-985b-32f13cf9429g",
+                            CostCategoryId = "a4f10e4c-70cb-44ae-985b-32f13cf9429g",
                             dateTime = new DateTime(2021, 01, 01),
                             description = "pizza desc"
         },
-                             new CostItem
+                             new Item
                         {
                                    costItemId = "cb4bf545-176b-4453-94c5-45262a9fd8c6",
                            name = "burger",
+                           type = 0,
                            amount = 30.50,
-                            costCategoryId = "a4f10e4c-70cb-44ae-985b-32f13cf9429g",
+                            CostCategoryId = "a4f10e4c-70cb-44ae-985b-32f13cf9429g",
                               dateTime = new DateTime(2021, 01, 20),
                             description = "burger desc"
                         },
@@ -121,8 +125,8 @@ namespace MeetupAPI
                      userId = "admin"
                 }
             };
-            _budgetContext.AddRange(user1);
             _budgetContext.AddRange(roles);
+            _budgetContext.AddRange(user1);
             _budgetContext.AddRange(budgets);
             _budgetContext.SaveChanges();
         }

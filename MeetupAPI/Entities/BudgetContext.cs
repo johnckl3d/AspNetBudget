@@ -23,7 +23,7 @@ namespace MeetupAPI.Entities
 
         public DbSet<CostCategory> CostCategories { get; set; }
 
-        public DbSet<CostItem> CostItems { get; set; }
+        public DbSet<Item> CostItems { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -47,9 +47,9 @@ namespace MeetupAPI.Entities
               .OnDelete(DeleteBehavior.Cascade);
 
             modelBuilder.Entity<CostCategory>()
-               .HasMany<CostItem>(c => c.costItems)
+               .HasMany<Item>(c => c.costItems)
                .WithOne(b => b.costCategory)
-                 .HasForeignKey(c => c.costCategoryId)
+                 .HasForeignKey(c => c.CostCategoryId)
                .OnDelete(DeleteBehavior.Cascade);
 
           
